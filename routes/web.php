@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Mail\ContactanosMailable;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +21,12 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+/*
+Route::get('contactanos',function(){
+   $correo=new ContactanosMailable;
+   Mail::to('christiancelsomamanisoliz0@gmail.com')->send($correo);
+   return "Mensaje enviado";
+});*/
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

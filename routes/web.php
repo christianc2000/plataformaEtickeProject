@@ -20,7 +20,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['register'=>true,'verify'=>true]);
 /*
 Route::get('contactanos',function(){
    $correo=new ContactanosMailable;
@@ -28,5 +28,8 @@ Route::get('contactanos',function(){
    return "Mensaje enviado";
 });*/
 
+Route::get('/dashboard',function(){
+   return view('dashboard');
+});
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','verified'])->name('home');

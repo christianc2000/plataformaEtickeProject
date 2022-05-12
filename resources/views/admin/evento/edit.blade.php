@@ -11,9 +11,7 @@
 
         <div class="card-body">
             <form action="{{ route('admin.evento.update', $evento) }}" method="POST">
-                @csrf
-                @method("put")
-                entra
+
                 <div class="container">
                     <div class="row g-2">
                         <div class="col-6">
@@ -71,7 +69,8 @@
                 </div>
 
                 <!--***************************************-->
-
+                @csrf
+                @method('put')
             </form>
         </div>
     </div>

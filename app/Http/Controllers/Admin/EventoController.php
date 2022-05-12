@@ -6,19 +6,23 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventoRequest;
 use App\Models\Category;
 use App\Models\Evento;
+use App\Models\Image;
 use Illuminate\Http\Request;
+use Illuminate\support\Facades\Storage;
 
 class EventoController extends Controller
 {
     public function index()
     {
         $eventos = Evento::all();
-         return view('admin.evento.index',compact('eventos'));
+        return view('admin.evento.index', compact('eventos'));
     }
     public function create()
     {
+        $evento = Evento::all();
         $categories = Category::all();
-        return view('admin.evento.create', compact('categories'));
+
+        return view('admin.evento.create', compact('categories', 'evento')); //,'evento'));
     }
 
     /**
@@ -30,8 +34,21 @@ class EventoController extends Controller
     public function store(EventoRequest $request)
     {
 
-        $c = Evento::create($request->all());
-        return redirect()->route('admin.evento.index');
+
+        $p = $request->except('image');
+        $c = Evento::create($p);
+        $imagenes = $request->file('image')->store('public/imagenes/evento');
+        $url = Storage::url($imagenes);
+
+        $img=Image::create([
+            'url' => $url,
+            'imageable_id'=>$c->id,
+            'imageable_type'=>Evento::class,
+        ]);
+        return $img;
+        //return redirect()->route('admin.evento.index');
+        // $c = Evento::create($request->all());
+        //return redirect()->route('admin.evento.index');
         //return view('admin.localidad.asignar');
     }
 
@@ -54,8 +71,8 @@ class EventoController extends Controller
     public function edit($id)
     {
         $evento = Evento::all()->find($id);
-        $categories=Category::all();
-        return view('admin.evento.edit', compact('evento','categories'));
+        $categories = Category::all();
+        return view('admin.evento.edit', compact('evento', 'categories'));
     }
 
     /**
@@ -65,12 +82,12 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EventoRequest $request, $id)
+    public function update(EventoRequest $request, Evento $evento)
     {
-     //    $evento=Evento::all()->find($id);
-         //$nevento=$evento->update($request);
-        // return $evento;
-        return "entra";
+        $evento->update($request->all());
+        //$r=['title'=>$request->title,'description'=>$request->description,'category_id'=>$request->category_id];
+        //return $r;
+        return redirect()->route('admin.evento.index');;
     }
 
     /**
@@ -81,7 +98,7 @@ class EventoController extends Controller
      */
     public function destroy($id)
     {
-        $evento=Evento::all()->find($id);
+        $evento = Evento::all()->find($id);
         $evento->delete();
         return redirect()->route('admin.evento.index');
     }

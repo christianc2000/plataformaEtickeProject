@@ -10,7 +10,7 @@
     <div class="card">
 
         <div class="card-body">
-            <form action="{{ route('admin.evento.store') }}" method="POST">
+            <form action="{{ route('admin.evento.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="container">
                     <div class="row g-2">
@@ -30,20 +30,32 @@
                                     name="category_id" required>
                                     <option value="" selected disabled>Seleccionar</option>
                                     @foreach ($categories as $cat)
-                                        <option value="{{$cat->id}}">{{$cat->name}}</option>
+                                        <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
                         <div class="col-6">
-                            <label for="">Imágen Principal</label>
-                            <div class="card" style="width: 18rem;">
-                                <img src="https://e00-us-marca.uecdn.es/assets/multimedia/imagenes/2022/05/04/16516924664132.jpg"
-                                    class="card-img-top" alt="..." width="50" height="150" id="image" name=image>
-                                <div class="card-body">
-                                    <h5 class="card-title">Lista de imagenes</h5>
 
-                                    <input type="file" class="form-control" id="imagen">
+                            {{-- <div class="form-group">
+                                <div class="image-wrapper">
+                                    <img id="picture"
+                                        src="https://www.agroworldspain.com/img/noimage.png">
+                                </div>
+                                <label class="py-1" id="labelfoto" name="labelfoto">FOTO VACÍA</label>
+                                <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                            </div>
+                            @error('image')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror --}}
+                            <div class="card">
+                                <div class="car-body">
+                                    <div class="form-group">
+                                        <input type="file" name="image" id="image"  accept="image/*">
+                                        @error('image')
+                                               <small class="text-danger">{{$message}}</small>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -67,11 +79,23 @@
 @stop
 
 @section('css')
+    <style>
+        .image-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+        }
+
+        .image-wrapper img {
+            position: absolute;
+            object-file: cover;
+            width: 65%;
+            height: 100%;
+        }
+
+    </style>
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
-    <script>
-        console.log('Hi!');
-    </script>
+
 @stop

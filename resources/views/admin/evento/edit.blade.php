@@ -10,7 +10,7 @@
     <div class="card">
 
         <div class="card-body">
-            <form action="{{ route('admin.evento.update', $evento->id) }}" method="POST">
+            <form action="{{ route('admin.evento.update', $evento) }}" method="POST">
                 @csrf
                 @method('put')
                 <div class="container">
@@ -34,12 +34,12 @@
                             </div>
                             <div class="mb-3">
                                 <label for="">Categoria: </label>
-                                <select class="form-select" aria-label="Default select example" id="category"
-                                    name="category" required>
-                                    <option value="" selected disabled>Seleccionar</option>
+                                <select class="form-select" aria-label="Default select example" id="category_id"
+                                    name="category_id" required>
+                                    <option value="" disabled>Seleccionar</option>
                                     @foreach ($categories as $c)
-                                        <option value="{{ $c }}"
-                                            {{ $c->id == $evento->category_id ? 'selected' : '' }}>{{ $c->name }}
+                                        <option value={{$c->id}}
+                                        {{ $c->id == $evento->category_id ? 'selected' : '' }}>{{ $c->name }}
                                         </option>
                                     @endforeach
                                 </select>

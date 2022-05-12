@@ -9,8 +9,10 @@ class Persona extends Model
 {
     use HasFactory;
     protected $guarded=['id','created_at','update_at'];
-
+    //
     public function user(){
         return $this->belongsTo(Persona::class);
     }
+    //
+
 }

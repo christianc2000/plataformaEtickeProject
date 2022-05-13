@@ -10,12 +10,12 @@
     <div class="card">
 
         <div class="card-body">
-            <form action="{{ route('admin.evento.update', $evento) }}" method="POST">
+            <form action="{{ route('admin.evento.update', $evento) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="container">
                     <div class="row g-2">
-                        <div class="col-6">
+                        <div class="col-8">
                             <div class="mb-3">
                                 <label for="exampleFormControlInput1" class="form-label">Título</label>
                                 <input type="text" class="form-control" id="title" name="title"
@@ -26,15 +26,16 @@
                             </div>
                             <div class="mb-3">
                                 <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" id="description" name="description"
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" id="description" name="description"
                                     required>{{ $evento->description }}</textarea>
                                 @error('description')
                                     <small class="text-danger">{{ $message }}</small>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="">Categoria: </label>
-                                <select class="form-select" aria-label="Default select example" id="category_id"
+                                <label for="exampleFormControlTextarea1" class="form-label">Categoria: </label>
+                                <br>
+                                <select class="form-control" aria-label="Default select example" id="category_id"
                                     name="category_id" required>
                                     <option value="" disabled>Seleccionar</option>
                                     @foreach ($categories as $c)
@@ -45,35 +46,52 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="formFile" class="form-label">Foto de Perfil</label>
+                        <div class="col-md-4">
+
+
                             @if ($evento->image == null)
-                                <div class="form-group">
-                                    <div class="image-wrapper">
-                                        <img id="picture" src="https://www.agroworldspain.com/img/noimage.png">
+                                <div class="form-group px-2">
+                                    <div class="card" style="width: 18rem;">
+                                        <label for="picture" class="form-label text-center">Foto Principal</label>
+                                        <div class="image-wrapper">
+                                            <img id="picture" name="picture" src="https://www.agroworldspain.com/img/noimage.png">
+                                        </div>
+                                        <br>
+                                        <div class="card-body">
+                                            <label for="image" class="py-1" id="labelfoto" name="labelfoto">Sin imagen</label>
+                                            <input class="form-control" type="file" id="image" name="image"
+                                                accept="image/*">
+                                            @error('image')
+                                                <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
                                     </div>
-                                    <label class="py-1" id="labelfoto" name="labelfoto">Sin foto de Perfil</label>
-                                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
-                                    @error('image')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
                                 </div>
                             @else
                                 <div class="form-group px-2">
-                                    <div class="image-wrapper mb-3">
-                                        <img id="picture" src="{{ Storage::url($image->url) }}"
-                                            class="img-responsive img-thumbnail">
-
+                                    <div class="card" style="width: 18rem;">
+                                        <label for="formFile" class="form-label text-center">Foto Principal</label>
+                                        <div class="image-wrapper mb-3">
+                                            <img id="picture" src="{{ asset($image->url) }}"
+                                                class="img-responsive img-thumbnail">
+                                        </div>
+                                        <br>
+                                        <div class="card-body">
+                                            <label class="py-1" id="labelfoto" name="labelfoto">Imagen actual</label>
+                                            <input class="form-control" type="file" id="image" name="image"
+                                                accept="image/*">
+                                        </div>
                                     </div>
-                                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
                                 </div>
                             @endif
-                        </div>
-                        <div class="col-6">
 
                         </div>
 
-                        <div class="col-6">
+                        <div class="col-5">
+
+                        </div>
+
+                        <div class="col-7">
                             <a href="{{ route('admin.evento.index') }}" class="btn btn-danger mb-4">Cancelar</a>
                             <a href="#" class="btn btn-primary mb-4">Editar Localidad</a>
                             <button class="btn btn-success mb-4" type="submit">Guardar</button>
@@ -92,14 +110,14 @@
     <style>
         .image-wrapper {
             position: relative;
-            padding-bottom: 56.25%;
+            padding-bottom: 65%;
         }
 
         .image-wrapper img {
             position: absolute;
             object-file: cover;
-            width: 65%;
-            height: 100%;
+            width: 100%;
+            height: 135%;
         }
 
     </style>

@@ -27,7 +27,7 @@ class EventoRequest extends FormRequest
             'title'=>'required',
             'description'=>'required',
             'category_id'=>'required',
-            'image'=>'required|image|max:2048',
+            'image'=>'image|max:10240'
         ];
     }
     public function messages()
@@ -36,7 +36,6 @@ class EventoRequest extends FormRequest
             'title'=>'Debe rellenar el campo título',
             'description'=>'Debe describir el evento',
             'category_id'=>'Debe seleccionar una categoria',
-            'image.required'=>'Debe rellenar el campo Imagen',
             'image.image'=>'Debe escoger una imagen',
             'image.max'=>'imagen con mucha calidad'
         ];

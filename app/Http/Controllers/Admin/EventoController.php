@@ -8,7 +8,9 @@ use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Images;
 use Illuminate\Http\Request;
+use Facade\FlareClient\Stacktrace\File;
 use Illuminate\support\Facades\Storage;
+
 
 class EventoController extends Controller
 {
@@ -38,6 +40,7 @@ class EventoController extends Controller
         $p = $request->except('image');
         $c = Evento::create($p);
         $imagenes = $request->file('image')->store('public/images/evento');
+        return $imagenes;
         $url = Storage::url($imagenes);
 
         $img=Images::create([
@@ -83,13 +86,34 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EventoRequest $request, Evento $evento)
+    public function update(Request $request, Evento $evento)
     {
-        return $request;
-        $evento->update($request->all());
+
+        $v = $request->except('image');
+        $evento->update($v);
+        //return dd($request->hasFile('image'));
+        if ($request->hasfile('image')) {
+
+            if ($evento->image != null) {
+                //Storage::disk($request->image)->delete($persona->image->url);//('image')->delete($persona->image->url);
+                return $evento->image->url;
+                Storage::delete($evento->image->url);
+
+                $evento->image->delete();
+            }
+            $url = Storage::put('/storage/images/evento', $request->file('image'));
+            $img=Images::create([
+                'url' => $url,
+                'imageable_id'=>$evento->id,
+                'imageable_type'=>Evento::class,
+            ]);
+
+
+        }
+
         //$r=['title'=>$request->title,'description'=>$request->description,'category_id'=>$request->category_id];
         //return $r;
-        return redirect()->route('admin.evento.index');;
+        return redirect()->route('admin.evento.index');
     }
 
     /**

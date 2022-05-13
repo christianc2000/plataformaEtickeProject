@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\EventoRequest;
 use App\Models\Category;
 use App\Models\Evento;
-use App\Models\Image;
+use App\Models\Images;
 use Illuminate\Http\Request;
 use Illuminate\support\Facades\Storage;
 
@@ -37,16 +37,16 @@ class EventoController extends Controller
 
         $p = $request->except('image');
         $c = Evento::create($p);
-        $imagenes = $request->file('image')->store('public/imagenes/evento');
+        $imagenes = $request->file('image')->store('public/images/evento');
         $url = Storage::url($imagenes);
 
-        $img=Image::create([
+        $img=Images::create([
             'url' => $url,
             'imageable_id'=>$c->id,
             'imageable_type'=>Evento::class,
         ]);
-        return $img;
-        //return redirect()->route('admin.evento.index');
+
+        return redirect()->route('admin.evento.index');
         // $c = Evento::create($request->all());
         //return redirect()->route('admin.evento.index');
         //return view('admin.localidad.asignar');
@@ -72,7 +72,8 @@ class EventoController extends Controller
     {
         $evento = Evento::all()->find($id);
         $categories = Category::all();
-        return view('admin.evento.edit', compact('evento', 'categories'));
+        $image=$evento->image;
+        return view('admin.evento.edit', compact('evento', 'categories','image'));
     }
 
     /**
@@ -84,6 +85,7 @@ class EventoController extends Controller
      */
     public function update(EventoRequest $request, Evento $evento)
     {
+        return $request;
         $evento->update($request->all());
         //$r=['title'=>$request->title,'description'=>$request->description,'category_id'=>$request->category_id];
         //return $r;

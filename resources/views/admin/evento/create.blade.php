@@ -37,18 +37,17 @@
                         </div>
                         <div class="col-6">
 
-                            {{-- <div class="form-group">
+                            <div class="form-group">
                                 <div class="image-wrapper">
-                                    <img id="picture"
-                                        src="https://www.agroworldspain.com/img/noimage.png">
+                                    <img id="picture" src="https://www.agroworldspain.com/img/noimage.png">
                                 </div>
                                 <label class="py-1" id="labelfoto" name="labelfoto">FOTO VACÍA</label>
                                 <input class="form-control" type="file" id="image" name="image" accept="image/*">
                             </div>
                             @error('image')
                                 <small class="text-danger">{{ $message }}</small>
-                            @enderror --}}
-                            <div class="card">
+                            @enderror
+                            {{-- <div class="card">
                                 <div class="car-body">
                                     <div class="form-group">
                                         <input type="file" name="image" id="image"  accept="image/*">
@@ -57,7 +56,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-6">
 
@@ -97,5 +96,18 @@
 @stop
 
 @section('js')
+    <script>
+        document.getElementById('image').addEventListener('change', cambiarImagen);
 
+        function cambiarImagen(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('picture').setAttribute('src', event.target.result);
+
+            };
+            document.getElementById('labelfoto').innerHTML = "Foto cargada";
+            reader.readAsDataURL(file);
+        }
+    </script>
 @stop

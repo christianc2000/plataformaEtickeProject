@@ -36,7 +36,9 @@ class EventoRequest extends FormRequest
             'title'=>'Debe rellenar el campo título',
             'description'=>'Debe describir el evento',
             'category_id'=>'Debe seleccionar una categoria',
-            'image'=>'Debe rellenar el campo Imagen|Debe escoger una imagen',
+            'image.required'=>'Debe rellenar el campo Imagen',
+            'image.image'=>'Debe escoger una imagen',
+            'image.max'=>'imagen con mucha calidad'
         ];
     }
 }

@@ -38,24 +38,36 @@
                                     name="category_id" required>
                                     <option value="" disabled>Seleccionar</option>
                                     @foreach ($categories as $c)
-                                        <option value={{$c->id}}
-                                        {{ $c->id == $evento->category_id ? 'selected' : '' }}>{{ $c->name }}
+                                        <option value={{ $c->id }}
+                                            {{ $c->id == $evento->category_id ? 'selected' : '' }}>{{ $c->name }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label for="">Imágen Principal</label>
-                            <div class="card" style="width: 18rem;">
-                                <img src="https://e00-us-marca.uecdn.es/assets/multimedia/imagenes/2022/05/04/16516924664132.jpg"
-                                    class="card-img-top" alt="..." width="50" height="150">
-                                <div class="card-body">
-                                    <h5 class="card-title">Lista de imagenes</h5>
-
-                                    <input type="file" class="form-control" id="imagen">
+                        <div class="col-md-6">
+                            <label for="formFile" class="form-label">Foto de Perfil</label>
+                            @if ($evento->image == null)
+                                <div class="form-group">
+                                    <div class="image-wrapper">
+                                        <img id="picture" src="https://www.agroworldspain.com/img/noimage.png">
+                                    </div>
+                                    <label class="py-1" id="labelfoto" name="labelfoto">Sin foto de Perfil</label>
+                                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                                    @error('image')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
-                            </div>
+                            @else
+                                <div class="form-group px-2">
+                                    <div class="image-wrapper mb-3">
+                                        <img id="picture" src="{{ Storage::url($image->url) }}"
+                                            class="img-responsive img-thumbnail">
+
+                                    </div>
+                                    <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                                </div>
+                            @endif
                         </div>
                         <div class="col-6">
 
@@ -77,11 +89,37 @@
 @stop
 
 @section('css')
+    <style>
+        .image-wrapper {
+            position: relative;
+            padding-bottom: 56.25%;
+        }
+
+        .image-wrapper img {
+            position: absolute;
+            object-file: cover;
+            width: 65%;
+            height: 100%;
+        }
+
+    </style>
     <link rel="stylesheet" href="/css/admin_custom.css">
 @stop
 
 @section('js')
     <script>
         console.log('Hi!');
+        //cambiar imagen
+        document.getElementById('image').addEventListener('change', cambiarImagen);
+
+        function cambiarImagen(event) {
+            var file = event.target.files[0];
+            var reader = new FileReader();
+            reader.onload = (event) => {
+                document.getElementById('picture').setAttribute('src', event.target.result);
+            };
+            document.getElementById('labelfoto').innerHTML = "Foto cargada";
+            reader.readAsDataURL(file);
+        }
     </script>
 @stop

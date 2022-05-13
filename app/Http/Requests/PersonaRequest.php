@@ -44,7 +44,6 @@ class PersonaRequest extends FormRequest
             'lastname.max'=>'máximo 30 dígitos',
             'country.required'=>'Debe rellenar el campo Fecha de Nacimiento',
             'sex.required'=>'Debe rellenar el campo Sexo',
-            
             'fecha_nac.required'=>'colocar Fecha de Nacimiento',
         ];
     }

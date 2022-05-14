@@ -40,7 +40,7 @@ class EventoController extends Controller
         $p = $request->except('image');
         $c = Evento::create($p);
         $imagenes = $request->file('image')->store('public/images/evento');
-        return $imagenes;
+
         $url = Storage::url($imagenes);
 
         $img=Images::create([

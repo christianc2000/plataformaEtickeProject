@@ -48,7 +48,7 @@
                                     <br>
                                     <div class="card-body">
                                         <label class="py-1" id="labelfoto" name="labelfoto">FOTO VACÍA</label>
-                                        <input class="form-control" type="file" id="image" name="image" accept="image/*">
+                                        <input class="form-control" type="file" id="image[]" name="image[]" multiple accept="image/*">
                                     </div>
                                 </div>
                             </div>

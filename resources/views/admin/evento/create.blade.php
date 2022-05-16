@@ -37,7 +37,6 @@
                             </div>
                         </div>
                         <div class="col-4">
-
                             <div class="form-group px-2">
                                 <div class="card" style="width: 18rem;">
                                     <label for="formFile" class="form-label text-center">Foto Principal</label>
@@ -48,7 +47,8 @@
                                     <br>
                                     <div class="card-body">
                                         <label class="py-1" id="labelfoto" name="labelfoto">FOTO VACÍA</label>
-                                        <input class="form-control" type="file" id="image[]" name="image[]" multiple accept="image/*">
+                                        <input class="form-control" type="file" id="image" name="image[]" multiple
+                                            accept="image/*">
                                     </div>
                                 </div>
                             </div>
@@ -59,6 +59,7 @@
                         <div class="col-5">
 
                         </div>
+
                         <div class="col-7">
                             <a href="{{ route('admin.evento.index') }}" class="btn btn-danger mb-4">Cancelar</a>
                             <button class="btn btn-primary mb-4" type="submit">Localidad</button>
@@ -95,7 +96,7 @@
 
 @section('js')
     <script>
-        document.getElementById('image').addEventListener('change', cambiarImagen);
+        document.getElementById('image[]').addEventListener('change', cambiarImagen);
 
         function cambiarImagen(event) {
             var file = event.target.files[0];

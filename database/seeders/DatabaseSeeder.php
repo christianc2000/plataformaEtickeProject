@@ -15,11 +15,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $evento = 'public/images/evento';//para direccionar la carpeta
+        $evento = 'public/imagenes';//para direccionar la carpeta
         Storage::deleteDirectory($evento);//para eliminar la carpeta
         Storage::makeDirectory($evento);//para crear la carpeta
         // \App\Models\User::factory(10)->create();
         $this->call(CategorySeeder::class);
         $this->call(PersonaSeeder::class);
+        $this->call(PositionSeeder::class);
     }
 }

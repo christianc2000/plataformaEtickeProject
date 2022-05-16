@@ -15,4 +15,8 @@ class Images extends Model
     {
         return $this->morphTo();
     }
+    public function position(){
+        return $this->belongsTo(Position::class);
+    }
+    
 }

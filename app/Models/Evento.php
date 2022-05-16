@@ -16,6 +16,6 @@ class Evento extends Model
     }
     public function image()
     {
-        return $this->morphOne(Images::class, 'imageable');
+        return $this->morphMany(Images::class, 'imageable');
     }
 }

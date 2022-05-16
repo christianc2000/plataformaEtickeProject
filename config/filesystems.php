@@ -31,8 +31,8 @@ return [
     'disks' => [
         'images' => [
             'driver' => 'local',
-            'root' => storage_path('app/public/images'),
-            'url' => env('APP_URL').'/images',
+            'root' => storage_path('app/public/imagenes'),
+            'url' => env('APP_URL').'/imagenes',
             'visibility' => 'public',
         ],
         'local' => [

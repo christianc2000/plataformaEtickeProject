@@ -27,7 +27,7 @@ class EventoRequest extends FormRequest
             'title'=>'required',
             'description'=>'required',
             'category_id'=>'required',
-            'image'=>'image|max:10240'
+            'image.*'=>'image|mimes:png,jpg,jpeg,gif,svg|max:10240'
         ];
     }
     public function messages()

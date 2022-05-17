@@ -37,7 +37,7 @@ class EventoController extends Controller
      */
     public function store(EventoRequest $request)
     {
-        return $request;
+
         $p = $request->except('image');
         $c = Evento::create($p);
         if ($request->hasFile('image')) {
@@ -86,9 +86,11 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        $ev = Evento::all()->find($id);
-        $img = $ev->image;
-        return view('prueba', compact('img'));
+        $evento = Evento::all()->find($id);
+        $images = $evento->image;
+        //$img=$evento->image;
+        //return view('prueba', compact('img'));
+        return view('admin.evento.show', compact('evento', 'images'));
     }
 
     /**
@@ -102,7 +104,7 @@ class EventoController extends Controller
         $evento = Evento::all()->find($id);
         $categories = Category::all();
         $image = $evento->image;
-        
+
         //return view('prueba');
         return view('admin.evento.edit', compact('evento', 'categories', 'image'));
     }
@@ -117,7 +119,41 @@ class EventoController extends Controller
     public function update(Request $request, Evento $evento)
     {
 
+        //para aumentar imagenes
         return $request;
+        $c = $evento;
+        if ($request->hasFile('image')) {
+            $imagenes = $request->file('image');
+
+            foreach ($imagenes as $imagen) {
+                $nombre = time() . '_' . $imagen->getClientOriginalName();
+                $ruta = public_path() . '/storage/imagenes';
+                $imagen->move($ruta, $nombre);
+                $urlimagenes[]['url'] = '/storage/imagenes/' . $nombre;
+                // $imagen->store('public/imagenes/evento/prueba');
+                //return $imagen;
+            }
+            //para recupera las url de las imagenes ya guardas y usarlas para crear el modelo image
+            $i = 1;
+            foreach ($urlimagenes as $urli) {
+                if ($i == 1) {
+                    $img = Images::create([
+                        'position_id' => 1,
+                        'url' => Arr::get($urli, 'url'),
+                        'imageable_id' => $c->id,
+                        'imageable_type' => Evento::class,
+                    ]);
+                } else {
+                    $img = Images::create([
+                        'position_id' => 2,
+                        'url' => Arr::get($urli, 'url'),
+                        'imageable_id' => $c->id,
+                        'imageable_type' => Evento::class,
+                    ]);
+                }
+                $i++;
+            }
+        }
         return redirect()->route('admin.evento.index');
     }
 

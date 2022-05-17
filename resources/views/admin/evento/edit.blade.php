@@ -55,37 +55,38 @@
                                 <img src="{{ asset($im->url) }}" class="card-img-top" alt="...">
                                 <div class="card-body">
                                     <div class="container">
-                                        <div id="carouselExampleIndicators" class="carousel slider container-img" style="height: 100%; background: goldenrod"
-                                             data-bs-ride="true">
+                                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                                             <div class="carousel-inner">
                                                 @foreach ($image as $img)
                                                     @if ($image->first() == $img)
                                                         <div class="carousel-item active">
-                                                            <img src="{{ asset($img->url) }}" class="d-block w-100" style="max-height: 100%"
-                                                                alt="...">
+                                                            <img src="{{ asset($img->url) }}" class="d-block w-100"
+                                                                alt="{{ $img->url }}">
                                                         </div>
                                                     @else
                                                         <div class="carousel-item">
-                                                            <img src="{{ asset($img->url) }}" class="d-block w-100" style="max-height: 100%"
-                                                                alt="...">
+                                                            <img src="{{ asset($img->url) }}" class="d-block w-100"
+                                                                alt="{{ $img->url }}">
                                                         </div>
                                                     @endif
                                                 @endforeach
                                             </div>
                                             <button class="carousel-control-prev" type="button"
-                                                data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                                data-bs-target="#carouselExampleControls" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Previous</span>
                                             </button>
                                             <button class="carousel-control-next" type="button"
-                                                data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                                data-bs-target="#carouselExampleControls" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Next</span>
                                             </button>
                                         </div>
+                                        <input class="form-control" type="file" id="image" name="image[]" multiple
+                                            accept="image/*">
                                         <br>
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#exampleModal"> Abrir Galeria </button>
+                                            data-bs-target="#exampleModal" data-bs-whatever="@mdo">Abrir Galeria</button>
                                     </div>
 
                                 </div>
@@ -102,34 +103,45 @@
 
                     </div>
                 </div>
-                <!--***************************************-->
-
+                <!--****************MODAL-INDEX***********************-->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
-                    <div class="modal-dialog modal-xl">
+                    <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Galeria</h5>
+                                <h5 class="modal-title" id="títulomodal">Galeria</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
-
                             <div class="modal-body">
-                                <div class="wrapperes py-10 px-5">
+                                <div class="row">
+
                                     @foreach ($image as $img)
-                                        <div class="container-img" id="image1" name="image1">
-                                                <img class="checkeable px-10 w-100 items-center rounded zoom"
-                                                    src="{{ asset($img->url) }}" id="image" name="image" alt="">
+                                        <div class="col-lg-4 mb-4">
+
+                                            <div class="text-center container-img">
+                                                <img src="{{ asset($img->url) }}" class="mb-4 rounded zoom"
+                                                    style="height: 100px;" alt="...">
+                                            </div>
+                                            <div class="text-center mb-4">
+                                                <form action="{{ route('admin.images.destroy', $img->id) }}"
+                                                    method="POST">
+                                                    <a href="#" class="btn btn-dark">Perfil</a>
+                                                    @csrf
+                                                    <!--metodo para añadir token a un formulario-->
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     @endforeach
+
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-success">Usar de Perfil</button>
-                                <button type="button" id="ModelbtEliminar" class="btn btn-danger">Eliminar
-
-                                </button>
+                                <button type="button" class="btn btn-primary">Guardar</button>
                             </div>
                         </div>
                     </div>
@@ -175,8 +187,7 @@
         }
 
         .zoom:hover {
-            background-color: green;
-            transform: scale(1.5);
+            transform: scale(2);
         }
 
         img {
@@ -190,10 +201,58 @@
             width: 300px;
         }
 
+        .button-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        .button-container a {
+            position: absolute;
+            bottom: 4em;
+            right: 4em;
+            background-color: #8F0005;
+            border-radius: 1.5em;
+            color: white;
+            text-transform: uppercase;
+            padding: 1em 1.5em;
+        }
+
+        .button-container a:hover {
+            background-color: red;
+            cursor: pointer;
+            color: white;
+        }
+
         .container-img {
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .caption-style-2 {
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        .caption-style-2 .caption {
+            cursor: pointer;
+            position: absolute;
+            opacity: 0;
+            top: 300px;
+            -webkit-transition: all 0.15s ease-in-out;
+            -moz-transition: all 0.15s ease-in-out;
+            -o-transition: all 0.15s ease-in-out;
+            -ms-transition: all 0.15s ease-in-out;
+            transition: all 0.15s ease-in-out;
+        }
+
+        .caption-style-2 .blur {
+            background-color: rgba(0, 0, 0, 0.7);
+            height: 300px;
+            width: 400px;
+            z-index: 5;
+            position: absolute;
         }
 
         .wrapperes {
@@ -238,6 +297,25 @@
 
 @section('js')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    {{-- script para colocar modal --}}
+    <script>
+        const exampleModal = document.getElementById('exampleModal')
+        exampleModal.addEventListener('show.bs.modal', event => {
+            // Button that triggered the modal
+            const button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            const recipient = button.getAttribute('data-bs-whatever')
+            // If necessary, you could initiate an AJAX request here
+            // and then do the updating in a callback.
+            //
+            // Update the modal's content.
+            const modalTitle = exampleModal.querySelector('.modal-title')
+            const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+            modalTitle.textContent = `Galeria`
+            modalBodyInput.value = recipient
+        })
+    </script>
     <script>
         console.log('Hi!');
         //cambiar imagen
@@ -262,7 +340,7 @@
                 $("#boton02").remove();
             });
             $("#ModelbtEliminar").click(function() {
-                $("div").remove();
+                $("#image1").remove();
             });
             $("#boton04").click(function(event) {
                 $("p").remove(".borrame");
@@ -283,10 +361,10 @@
     </script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
-                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
-                                                                                                                                                                                                                                                                                                                                                                      </script>
-                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
-                                                                                                                                                                                                                                                                                                                                                                      </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </script>
 @stop

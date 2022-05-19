@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventoRequest;
+use App\Http\Requests\LocalidadRequest;
 use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Images;
@@ -37,7 +38,6 @@ class EventoController extends Controller
      */
     public function store(EventoRequest $request)
     {
-
         $p = $request->except('image');
         $c = Evento::create($p);
         if ($request->hasFile('image')) {
@@ -86,10 +86,12 @@ class EventoController extends Controller
      */
     public function show($id)
     {
+
         $evento = Evento::all()->find($id);
         $images = $evento->image;
-        //$img=$evento->image;
-        //return view('prueba', compact('img'));
+        $img = $evento->image;
+
+
         return view('admin.evento.show', compact('evento', 'images'));
     }
 
@@ -106,7 +108,9 @@ class EventoController extends Controller
         $image = $evento->image;
 
         //return view('prueba');
-        return view('admin.evento.edit', compact('evento', 'categories', 'image'));
+
+        return view('admin.evento.edit2', compact('categories', 'evento', 'image'));
+        //return view('admin.evento.edit', compact('evento', 'categories', 'image'));
     }
 
     /**
@@ -116,12 +120,18 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Evento $evento)
+    public function update(EventoRequest $request, $id)
     {
 
+
         //para aumentar imagenes
-        return $request;
-        $c = $evento;
+
+        $c = Evento::all()->find($id);
+        $c->title = $request->title;
+        $c->description = $request->description;
+        $c->category_id = $request->category_id;
+        $c->save();
+
         if ($request->hasFile('image')) {
             $imagenes = $request->file('image');
 
@@ -156,7 +166,17 @@ class EventoController extends Controller
         }
         return redirect()->route('admin.evento.index');
     }
-
+    public function localidadIndex(Evento $evento) //$id del Evento
+    {
+      
+        return view('admin.localidad.index', compact('evento'));
+    }
+    public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
+    {
+        
+        return $request;
+        return redirect()->route('admin.evento.localidad.index', $evento);
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -165,6 +185,7 @@ class EventoController extends Controller
      */
     public function destroy($id)
     {
+
         $evento = Evento::all()->find($id);
         $evento->delete();
         return redirect()->route('admin.evento.index');

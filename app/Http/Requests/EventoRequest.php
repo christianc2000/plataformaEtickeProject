@@ -27,17 +27,19 @@ class EventoRequest extends FormRequest
             'title'=>'required',
             'description'=>'required',
             'category_id'=>'required',
-            'image.*'=>'image|mimes:png,jpg,jpeg,gif,svg|max:10240'
+            'image.*'   =>  'required|image|mimes:jpg,jpeg,bmp,png',
+            //'image.*'=>'required|image|mimes:png,jpg'
         ];
     }
     public function messages()
     {
         return [
-            'title'=>'Debe rellenar el campo título',
-            'description'=>'Debe describir el evento',
-            'category_id'=>'Debe seleccionar una categoria',
-            'image.image'=>'Debe escoger una imagen',
-            'image.max'=>'imagen con mucha calidad'
+            'title.required'=>'Debe rellenar el campo título',
+            'description.required'=>'Debe describir el evento',
+            'category_id.required'=>'Debe seleccionar una categoria',
+           /* 'image.required'=>'Error debe seleccionar una imágen',
+            'image.image'=>'Error debe escoger una imagen',
+            'image.max'=>'Error la(s) imágen(es) superan la calidad de 10 MB'*/
         ];
     }
 }

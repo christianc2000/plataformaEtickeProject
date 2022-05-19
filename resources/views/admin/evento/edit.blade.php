@@ -9,7 +9,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <form action="{{ route('admin.evento.update', $evento) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.evento.update', $evento->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('put')
                 <div class="container">
@@ -49,10 +49,11 @@
 
                             <div class="card">
                                 @php
-                                    $im = $image->where('position_id', '=', 1)->first();
+                                    
+                                    $im = $image->first();
                                     
                                 @endphp
-                                <img src="{{ asset($im->url) }}" class="card-img-top" alt="...">
+                                <img src="" class="card-img-top" style="height: 200px" alt="...">
                                 <div class="card-body">
                                     <div class="container">
                                         <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
@@ -60,8 +61,7 @@
                                                 @foreach ($image as $img)
                                                     @if ($image->first() == $img)
                                                         <div class="carousel-item active">
-                                                            <img src="{{ asset($img->url) }}" class="d-block w-100"
-                                                                alt="{{ $img->url }}">
+                                                            <img src="" class="d-block w-100" alt="">
                                                         </div>
                                                     @else
                                                         <div class="carousel-item">
@@ -103,50 +103,51 @@
 
                     </div>
                 </div>
-                <!--****************MODAL-INDEX***********************-->
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="títulomodal">Galeria</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
+            </form>
+            <!--****************MODAL-INDEX***********************-->
 
-                                    @foreach ($image as $img)
-                                        <div class="col-lg-4 mb-4">
 
-                                            <div class="text-center container-img">
-                                                <img src="{{ asset($img->url) }}" class="mb-4 rounded zoom"
-                                                    style="height: 100px;" alt="...">
-                                            </div>
-                                            <div class="text-center mb-4">
-                                                <form action="{{ route('admin.images.destroy', $img->id) }}"
-                                                    method="POST">
-                                                    <a href="#" class="btn btn-dark">Perfil</a>
-                                                    @csrf
-                                                    <!--metodo para añadir token a un formulario-->
-                                                    @method('delete')
-                                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                                </form>
-                                            </div>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="títulomodal">Galeria</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+
+                                @foreach ($image as $img)
+                                    <div class="col-lg-4 mb-4">
+
+                                        <div class="text-center container-img">
+                                            <img src="{{ asset($img->url) }}" class="mb-4 rounded zoom"
+                                                style="height: 100px;" alt="...">
                                         </div>
-                                    @endforeach
+                                        <div class="text-center mb-4">
+                                            <form action="{{ route('admin.images.destroy', $img->id) }}" method="POST">
+
+                                                @csrf
+                                                <!--metodo para añadir token a un formulario-->
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                @endforeach
 
 
-                                </div>
                             </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Guardar</button>
-                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Guardar</button>
                         </div>
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
     </div>
 @stop
@@ -361,10 +362,10 @@
     </script>
     <!-- Option 2: Separate Popper and Bootstrap JS -->
     <!--
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </script>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            crossorigin="anonymous">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    crossorigin="anonymous">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    crossorigin="anonymous">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </script>
 @stop

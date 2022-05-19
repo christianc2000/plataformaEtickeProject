@@ -16,84 +16,148 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("#btnDelete").click(function() {
-                $("#div1").remove();
+            $('#btnDelete').on('click', function() {
+                $('input[type=checkbox]:checked').each(function() {
+                    var idcheck = $(this).attr("value");
+                    $("div#" + idcheck).remove();
+                });
+            });
+            $('#eliminar').on('click', function() {
+                $('input[type=checkbox][name=modalC]:checked').each(function() {
+                    //  alert($(this).attr("value"));
+                    var id=$(this).attr("value");
+                    var idcheck = "modal" + $(this).attr("value");
+                    //alert(idcheck);
+                    $("div#" + idcheck).remove();
+                    $("#"+id).remove();
+                });
             });
 
+            $('#guardarModal').on('click', function() {
+                
+            });
         });
     </script>
+    <style>
+        .modal-body {
+            height: 450px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .container-img {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .zoom {
+            transition: transform .2s;
+        }
+
+        .zoom:hover {
+            transform: scale(2);
+        }
+
+    </style>
 </head>
 
 <body>
 
-    @csrf
-    @method('put')
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> Abrir
-        Galeria
-    </button>
-    <button type="button" id="btnDelete" class="btn btn-danger">Eliminar</button>
-    <div id="div1">
-        Texto Principal
-        <p>primer linea</p>
-        <p>segunda linea</p>
-    </div>
-    <div class="row">
-        @foreach ($img as $i)
-            <div class="col-lg-4 mb-4" id="img1">
-                <input class="form-check-input" type="checkbox" value="{{ $i->id }}" id="check">
-                <img class="w-100 mb-4 rounded" src="{{ asset($i->url) }}" alt="">
-            </div>
-        @endforeach
-    </div>
+    <div class="card">
+        <div class="card">
+            @php
+                $perfil = $img->where('position_id', '=', 1)->first();
+            @endphp
+            @if ($perfil != null)
+                <div class="container-img">
+                    <img src="{{ asset($perfil->url) }}" id="{{$perfil->id}}" style="height: 200px" alt="">
+                </div>
+            @else
+                <div class="container-img">
+                    <img src="https://www.agroworldspain.com/img/noimage.png" alt="">
+                </div>
+            @endif
 
+        </div>
+        <input class="form-control" type="file" id="image[]" name="image[]" multiple accept="image/*">
+        <br>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"> Abrir
+            Galeria
+        </button>
+        <button type="button" id="btnDelete" class="btn btn-danger">Eliminar</button>
+        <div class="px-4">
+            Texto Principal
+            <p>primer linea</p>
+            <p>segunda linea</p>
+        </div>
+        <div class="row">
+            @foreach ($img as $i)
+                <div class="col-lg-3 mb-4" id="{{ $i->id }}">
+                    <input class="form-check-input" type="checkbox" value="{{ $i->id }}" id="check[]"
+                        name="check[]">
+                    <img class="mb-4 rounded" style="height: 100px;" src="{{ asset($i->url) }}" alt="">
+                </div>
+            @endforeach
+        </div>
+    </div>
+    {{--MODAL--}}
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    bienvenidos al modal
+                    Galeria de Imágenes
                     <div class="row">
-                        <label class="col-lg-4 mb-4">
 
-                            @foreach ($img as $i)
-                                <input class="form-check-input" type="checkbox" value="" id="1">
-                                <img class="w-100 mb-4 rounded" src="{{ asset($i->url) }}" alt="">
-                            @endforeach
+                        @foreach ($img as $i)
+                            @if ($i->position_id == 1)
+                                <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
+                                    <input class="form-check-input" type="checkbox" id="modal{{ $i->id }}"
+                                        name="modalC" value="{{ $i->id }}">
+                                    <br>
+                                    <div class="container-img" style="border: 10px solid; color: orange;">
+                                        <img class="mb-4 rounded zoom" style="height: 100px"
+                                            src="{{ asset($i->url) }}" id="modal{{ $i->id }}" name='imageModal'
+                                            alt="">
+                                    </div>
+                                    <div class="text-center">
+                                        <form action="{{ route('admin.images.update', $i->id) }}" method="POST">
+                                            @csrf
+                                            @method('put')
+                                            <button class="btn btn-success" type="submit">Perfil</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
+                                    <input class="form-check-input" type="checkbox" id="modal{{ $i->id }}"
+                                        name="modalC" value="{{ $i->id }}">
+                                    <br>
+                                    <div class="container-img">
+                                        <img class="mb-4 rounded zoom" style="height: 100px"
+                                            src="{{ asset($i->url) }}" id="modal{{ $i->id }}"
+                                            name='imageModal' alt="">
+                                    </div>
+                                    <div class="text-center">
+                                        <form action="{{ route('admin.images.update', $i->id) }}" method="POST">
+                                            @csrf
+                                            @method('put')
+                                            <button class="btn btn-success" type="submit">Perfil</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
 
-
-                            <input class="form-check-input" type="checkbox" value="" id="1">
-                            <img class="w-100 mb-4 rounded"
-                                src="https://blog.foto24.com/wp-content/uploads/2019/02/6-fotografia-de-Alejandro-Rodriguez-683x1024.jpg"
-                                alt="">
-						</label>
-                        <div class="col-lg-4 mb-4" id="img1">
-                            <input class="form-check-input" type="checkbox" value="" id="1">
-                            <img class="w-100 mb-4 rounded"
-                                src="https://images.pexels.com/photos/1679772/pexels-photo-1679772.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=400"
-                                alt="">
-                            <input class="form-check-input" type="checkbox" value="" id="1">
-                            <img class="w-100 mb-4 rounded"
-                                src="https://i0.wp.com/codigoespagueti.com/wp-content/uploads/2022/04/Dragon-Ball-Donde-estaria-la-casa-de-Goku-en-la-vida-real.jpg?fit=1280%2C720&quality=80&ssl=1"
-                                alt="">
-                        </div>
-                        <div class="col-lg-4 mb-4">
-                            <input class="form-check-input" type="checkbox" value="" id="1">
-                            <img class="w-100 mb-4 rounded"
-                                src="https://cloudfront-us-east-1.images.arcpublishing.com/elcomercio/BXIEH5QRR5EITLKJ2DIBN522DU.jpg"
-                                alt="">
-                            <input class="form-check-input" type="checkbox" value="" id="1">
-                            <img class="w-100 mb-4 rounded"
-                                src="https://thumbs.dreamstime.com/b/edificios-verticales-de-casas-con-cielo-y-%C3%A1rbol-azules-en-el-medio-169235124.jpg"
-                                alt="">
-                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-success">Usar de Perfil</button>
+                    <a href="#" class="btn btn-success" id="guardarModal">Guardar</a>
                     <button type="button" class="btn btn-danger" id="eliminar">
                         eliminar
                     </button>

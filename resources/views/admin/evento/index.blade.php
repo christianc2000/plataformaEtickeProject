@@ -35,8 +35,7 @@
                                 <form action="{{ route('admin.evento.destroy', $e->id) }}" method="POST">
                                     <a href="{{ route('admin.evento.show', $e->id) }}" class="btn btn-primary">Mostrar-Prueba</a>
                                     <a href="{{ route('admin.evento.edit', $e->id) }}" class="btn btn-secondary">Editar</a>
-                                    
-                                    <a href="#" class="btn btn-dark">Localidad</a>
+                                    <a href="{{route('admin.evento.localidad.index',$e->id)}}" class="btn btn-warning">Localidad</a>
                                     @csrf
                                     <!--metodo para añadir token a un formulario-->
                                     @method('delete')

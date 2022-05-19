@@ -8,6 +8,7 @@ use App\Http\Requests\LocalidadRequest;
 use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Images;
+use App\Models\Localidad;
 use Illuminate\Http\Request;
 use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Support\Arr;
@@ -168,14 +169,22 @@ class EventoController extends Controller
     }
     public function localidadIndex(Evento $evento) //$id del Evento
     {
-      
-        return view('admin.localidad.index', compact('evento'));
+        $localidades=Localidad::all();
+        return view('admin.localidad.index', compact('evento','localidades'));
     }
     public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
     {
-        
-        return $request;
-        return redirect()->route('admin.evento.localidad.index', $evento);
+
+        Localidad::create(
+            [
+                'ubicación' => $request->direccionLocalidad,
+                'gps' => $request->gpsLocalidad,
+                'nombreInfraestructura' => $request->nombreLocalidad,
+                'capacidadMaxima' => $request->capacidadLocalidad
+            ]
+        );
+     
+        return redirect()->route('admin.evento.localidad.index', compact('evento'));
     }
     /**
      * Remove the specified resource from storage.

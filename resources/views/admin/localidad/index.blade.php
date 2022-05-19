@@ -9,51 +9,55 @@
 @section('content')
 
     <div class="card">
-        <div class="card-header">
-
+        <div class="card-header text-center">
+              LOCALIDADES
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col-6">
-                    <select name="localidad" id="">
-                        <option value="">Tahuichi Aguilera</option>
-                        <option value="">Teatro Colegio Américano</option>
-                    </select>
-                    <a href="" class="btn btn-primary">Añadir Localidad</a>
+            <form action="" method="POST">
+                <div class="row">
+                    <div class="col-6">
+                        <select name="localidad" id="">
+                            <option value="" selected disabled>Seleccionar</option>
+                            @foreach ($localidades as $l)
+                                <option value="{{ $l->id }}">{{ $l->nombreInfraestructura }}</option>
+                            @endforeach
+                        </select>
+                        <a href="" class="btn btn-primary">Añadir Localidad</a>
+                    </div>
+                    <div class="col-6">
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            data-bs-whatever="@getbootstrap" style="background: greenyellow; color:black;">Crear
+                            Localidad</button>
+                    </div>
                 </div>
-                <div class="col-6">
+                <br>
+                <table id="tablaLocalidad" class="table table-striped shadow-lg mt-4" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>Localidad</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
 
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                        data-bs-whatever="@getbootstrap" style="background: greenyellow; color:black;">Crear
-                        Localidad</button>
-                </div>
-            </div>
-            <br>
-            <table id="tablaLocalidad" class="table table-striped shadow-lg mt-4" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>id</th>
-                        <th>Localidad</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
 
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
         </div>
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <form action="{{ route('admin.evento.localidad.store',$evento) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('admin.evento.localidad.store', $evento) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -69,23 +73,25 @@
                                     <label for="recipient-name" class="col-form-label">Gps:</label>
                                     <input type="text" class="form-control" id="gpsLocalidad" name="gpsLocalidad">
                                     @error('gpsLocalidad')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                     <label for="recipient-name" class="col-form-label">Nombre del lugar:</label>
                                     <input type="text" class="form-control" id="nombreLocalidad" name="nombreLocalidad">
                                     @error('nombreLocalidad')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                     <label for="recipient-name" class="col-form-label">Dirección:</label>
-                                    <input type="text" class="form-control" id="direccionLocalidad" name="direccionLocalidad">
+                                    <input type="text" class="form-control" id="direccionLocalidad"
+                                        name="direccionLocalidad">
                                     @error('direccionLocalidad')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                     <label for="recipient-name" class="col-form-label">Capacidad:</label>
-                                    <input type="number" class="form-control" id="capacidadLocalidad" name="capacidadLocalidad">
+                                    <input type="number" class="form-control" id="capacidadLocalidad"
+                                        name="capacidadLocalidad">
                                     @error('capacidadLocalidad')
-                                    <small class="text-danger">{{ $message }}</small>
-                                @enderror
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
                                 </div>
                                 <div class="col-6">
                                     <label for="message-text" class="col-form-label text-center">Mapa</label>

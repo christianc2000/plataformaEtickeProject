@@ -45,40 +45,35 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col-1"></div>
-                        <div class="col-3">
-                            <!-- Imagen Principal-->
-                            @php
-                                $img = $image->where('position_id', '=', 1)->first();
-                                // $img = $image->first();
-                            @endphp
+
+
+                        <!-- Imagen Principal-->
+                        @php
+                            $img = $image->where('position_id', '=', 1)->first();
+                            // $img = $image->first();
+                        @endphp
+
+                        <div class="col-lg-4 mb-4">
                             <div class="card">
-                                @if ($image != null)
-                                    <div class="cat container-img" style="overflow: hidden">
-                                        <div id="{{ $img->id }}">
-                                            <img src="{{ asset($img->url) }}" alt="...">
-                                        </div>
-                                    </div>
-                                @else
-                                    <div class="cat container-img" style="overflow: hidden">
-                                        <img src="https://www.agroworldspain.com/img/noimage.png" alt="...">
-                                    </div>
-                                @endif
-
                                 <div class="card-body">
-                                    <div class="container">
-
-                                        <input class="form-control" type="file" id="image" name="image[]" multiple
-                                            accept="image/*">
-                                        <br>
-                                        <button type="button" class="btn btn-primary form-control mb-4"
-                                            data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                            data-bs-whatever="@mdo">Abrir Galeria</button>
-                                    </div>
-
+                                    @if ($image != null)
+                                        <div class="cat container-img" style="overflow: hidden; background: gray">
+                                            <div id="{{ $img->id }}" class="cat container-img">
+                                                <img class="rounded" src="{{ asset($img->url) }}"
+                                                    id="modal{{ $img->id }}" name='imageModal' alt="">
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="cat container-img" style="overflow: hidden; border">
+                                            <img src="https://www.agroworldspain.com/img/noimage.png" alt="...">
+                                        </div>
+                                    @endif
+                                    <input class="form-control my-2" type="file" id="image" name="image[]" multiple
+                                        accept="image/*">
+                                    <button type="button" class="btn btn-primary form-control my-0" data-bs-toggle="modal"
+                                        data-bs-target="#exampleModal" data-bs-whatever="@mdo">Abrir Galeria</button>
                                 </div>
                             </div>
-
                         </div>
                         <div class="col-5">
                         </div>
@@ -108,7 +103,7 @@
                                     $img = $image->where('position_id', '=', 1)->first();
                                 @endphp
                                 @foreach ($image as $i)
-                                    @if ($i == $img)
+                                    @if ($i->id == $img->id)
                                         <!--Enmarca  a la Imagen seleccionada de Perfil-->
                                         <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
                                             <div class="px-3">
@@ -153,10 +148,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <a href="#" class="btn btn-success" id="guardarModal">Guardar</a>
-                            <button type="button" class="btn btn-danger" id="eliminar">
-                                eliminar
-                            </button>
+                            {{-- <a href="#" class="btn btn-success" id="guardarModal">Guardar</a> --}}
+                            <button type="button" class="btn btn-danger" id="eliminar">eliminar</button>
+
                         </div>
                     </div>
                 </div>
@@ -198,7 +192,7 @@
         }
 
         .cat {
-            height: 230px;
+            height: 250px;
             width: auto;
         }
 

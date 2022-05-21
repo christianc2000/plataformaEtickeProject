@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\EventoRequest;
+use App\Http\Requests\LocalidadEventoRequest;
 use App\Http\Requests\LocalidadRequest;
 use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Images;
 use App\Models\Localidad;
+use App\Models\localidadEvento;
 use Illuminate\Http\Request;
 use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Support\Arr;
@@ -87,7 +89,7 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-
+        return redirect()->route('admin.evento_localidad',$id);
         $evento = Evento::all()->find($id);
         $images = $evento->image;
         $img = $evento->image;
@@ -169,12 +171,13 @@ class EventoController extends Controller
     }
     public function localidadIndex(Evento $evento) //$id del Evento
     {
-        $localidades=Localidad::all();
-        return view('admin.localidad.index', compact('evento','localidades'));
+        $localidades = Localidad::all();
+
+        // return $evento->localidadesEvento;
+        return view('admin.localidad.index', compact('evento', 'localidades'));
     }
     public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
     {
-
         Localidad::create(
             [
                 'ubicación' => $request->direccionLocalidad,
@@ -183,8 +186,26 @@ class EventoController extends Controller
                 'capacidadMaxima' => $request->capacidadLocalidad
             ]
         );
-     
-        return redirect()->route('admin.evento.localidad.index', compact('evento'));
+        $localidades = Localidad::all();
+        return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
+    }
+    //Crear un localidadEvento
+    public function localidadEventoStore(LocalidadEventoRequest $request, Evento $evento)
+    {
+        $loc = Localidad::all()->where('nombreInfraestructura', '=', $request->localidad)->first();
+        localidadEvento::create(['localidad_id' => $loc->id, 'evento_id' => $evento->id]);
+        $localidades = Localidad::all();
+        return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
+    }
+    //Eliminar un localidadEvento
+    public function localidadEventoDelete($id)
+    {
+        $le = localidadEvento::all()->find($id);
+        $evento = Evento::all()->find($le->evento_id);
+        $le->delete();
+        $localidades = Localidad::all();
+
+        return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
     }
     /**
      * Remove the specified resource from storage.

@@ -10,50 +10,72 @@
 
     <div class="card">
         <div class="card-header text-center">
-              LOCALIDADES
+            LOCALIDADES
         </div>
         <div class="card-body">
-            <form action="" method="POST">
+            <form action="{{ route('admin.evento.localidadEvento.store', $evento) }}" method="POST">
+                @csrf
                 <div class="row">
                     <div class="col-6">
-                        <select name="localidad" id="">
+                        <select name="localidad" id="localidad" name="localidad">
                             <option value="" selected disabled>Seleccionar</option>
                             @foreach ($localidades as $l)
-                                <option value="{{ $l->id }}">{{ $l->nombreInfraestructura }}</option>
+                                <option value="{{ $l->nombreInfraestructura }}">{{ $l->nombreInfraestructura }}</option>
                             @endforeach
+                            @error('localidad')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
                         </select>
-                        <a href="" class="btn btn-primary">Añadir Localidad</a>
-                    </div>
-                    <div class="col-6">
 
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
-                            data-bs-whatever="@getbootstrap" style="background: greenyellow; color:black;">Crear
+                        <button type="submit" id="addLocalidad" class="btn btn-primary">Añadir Localidad</a>
+                    </div>
+                    <div class="col-3 mb-1">
+                        <button type="button" class="form-control btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"
+                            style="background: greenyellow; color:black;">Crear
                             Localidad</button>
                     </div>
                 </div>
-                <br>
-                <table id="tablaLocalidad" class="table table-striped shadow-lg mt-4" style="width:100%">
-                    <thead>
+            </form>
+            <br>
+            @php
+                
+            @endphp
+            <table id="tablaLocalidad" class="table table-striped shadow-lg mt-4" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Localidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($evento->localidadesEvento as $le)
                         <tr>
-                            <th>id</th>
-                            <th>Localidad</th>
-                            <th>Estado</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+                            @php
+                                $localidad = $localidades->find($le->localidad_id);
+                            @endphp
+                            <td>{{ $localidad->id }}</td>
+                            <td>{{ $localidad->nombreInfraestructura }}</td>
+                            <td></td>
 
-                            <td></td>
-                            <td></td>
-                            <td></td>
                             <td>
+                                <form action="{{ route('admin.evento.localidadEvento.delete', $le->id) }}" method="POST">
 
+                                    <a href="#" class="btn btn-warning">configurar</a>
+                                    <a href="#" class="btn btn-dark">ver</a>
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                                </form>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            </form>
+                    @endforeach
+                </tbody>
+            </table>
+
+
         </div>
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <form action="{{ route('admin.evento.localidad.store', $evento) }}" method="POST"
@@ -111,6 +133,7 @@
                         </div>
                     </div>
                 </div>
+
             </form>
         </div>
         <div class="card-footer">
@@ -118,6 +141,7 @@
                 <div class="col-4">
                     <a href="{{ route('admin.evento.index') }}" class="form-control btn btn-danger">Salir</a>
                 </div>
+
             </div>
         </div>
     </div>
@@ -181,7 +205,19 @@
     <script>
         console.log('Hi!');
         $(document).ready(function() {
-            $('#tablaLocalidad').DataTable();
+            /*  $('#addLocalidad').click(function() {
+                  var localidad = $('select[id=localidad]').val();
+                  if (localidad != null) {
+                      var i = $("#tablaLocalidad tr").length - 1; //para contar las filas nuevas
+                      markup = "<tr><td>" + i + "</td><td>" + localidad +
+                          "</td><td>3</td><td>4</td></tr>" //para cear una fila con sus columnas requeridas
+                      tableBody = $("table tbody"); //para obtener el elemento table su tbody
+                      tableBody.append(
+                      markup); //append para añadir toda una fila con los valores de la variable markup
+                  }else{
+                      alert("Debe seleccionar una localidad");
+                  }
+              });*/
         });
     </script>
 @stop

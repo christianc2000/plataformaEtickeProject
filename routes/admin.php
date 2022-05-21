@@ -12,4 +12,11 @@ Route::resource('image', ImagesController::class)->names('admin.images');
 
 Route::get('/evento/{evento}/localidad',[EventoController::class,'localidadIndex'])->name('admin.evento.localidad.index');
 Route::post('/evento/{evento}/localidad',[EventoController::class,'localidadStore'])->name('admin.evento.localidad.store');
+Route::post('/evento/{evento}/localidadEvento',[EventoController::class,'localidadEventoStore'])->name('admin.evento.localidadEvento.store');
+Route::delete('/evento/{id}/localidadEventoDelete',[EventoController::class,'localidadEventoDelete'])->name('admin.evento.localidadEvento.delete');
+route::post('/evento/{evento}/eventolocalidad',[LocalidadController::class,'eventoLocalidadstore'])->name('admin.eventoLocalidad.store');
+
+//localidad API GOOGLE MAP
 Route::resource('localidad',LocalidadController::class)->names('admin.localidad');
+Route::get('localidad/create/{evento_id?}',[LocalidadController::class,'create'])->name('admin.localidad.create');
+Route::get('localidades/{evento_id}',[LocalidadController::class,'index_evento_localidad'])->name('admin.evento_localidad');

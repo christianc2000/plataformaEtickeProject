@@ -99,17 +99,14 @@ class ImagesController extends Controller
         //   return Evento::all()->find($imag->imageable_id)->image;
         if ($imag->position_id != 1) {
             $aux = Images::all()->where('position_id', '=', 1)->first();
-
             $aux->position_id = 2;
-
             $aux->save();
-
             $imag->position_id = 1;
             $imag->save();
         }
         $e = Evento::all()->find($imag->imageable_id);
-        $img = $e->image;
-
+        //$img = $e->image;
+        // return $img;
         return redirect()->route('admin.evento.edit', $e);
     }
 

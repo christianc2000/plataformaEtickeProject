@@ -70,17 +70,23 @@
             </div>
         </div>
         <div class="card-footer">
-              <a href="{{route('admin.evento.index')}}" class="btn btn-primary">Volver</a>
+            <a href="{{ route('admin.evento.index') }}" class="btn btn-primary">Volver</a>
         </div>
     </div>
 @stop
 
 @section('css')
-    {{--<link rel="stylesheet" href="/css/admin_custom.css">--}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     <style type="text/css">
         .transformacion1 {
             text-transform: capitalize;
+        }
+
+        .card-body {
+            height: 400px;
+            width: 100%;
+            overflow-y: auto;
         }
 
         .transformacion2 {

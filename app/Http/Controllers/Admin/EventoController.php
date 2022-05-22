@@ -134,7 +134,7 @@ class EventoController extends Controller
             $json = json_decode($request->json); //en array todas las imágenes que estén en la vistas, las que se eliminó no saldrán
             $collection = collect($json); //en colección
             //return $collection->pluck('id');
-            
+
             if (count($imgE) == 1 && count($collection) == 0) {
                 $imgE->first()->delete();
             } else {
@@ -144,10 +144,10 @@ class EventoController extends Controller
                             $im->delete();
                         }
                     } else {
-                        $pluckCollection=$collection->pluck('id');
+                        $pluckCollection = $collection->pluck('id');
                         foreach ($imgE as $im) {
-                            if(!$pluckCollection->contains($im->id)){
-                                 $im->delete();
+                            if (!$pluckCollection->contains($im->id)) {
+                                $im->delete();
                             }
                         }
                     }
@@ -193,14 +193,37 @@ class EventoController extends Controller
                 $i++;
             }
         }
-        return redirect()->route('admin.evento.index');
+        function contarChar($char, $cadena)
+        {
+            $n = strlen($cadena);
+            $c = 0;
+            for ($i = 0; $i < $n; $i++) {
+                if ($cadena[$i] == $char)
+                    $c++;
+            }
+            return $c;
+        }
+        $urlH = redirect()->getUrlGenerator()->previous(); //URL de la anterior dirección en horarios
+        $indexF = strripos($urlH, '/') + 1;
+        $cadUltimo = substr($urlH, $indexF);
+
+        if ($cadUltimo == "horario") {
+            $n = strlen("http://127.0.0.1:8000/admin/evento/");
+            $idLEH = substr($urlH, $n, 1);
+            $parteUno = substr($urlH, $n);
+            $idLEH = substr($parteUno, 0, strpos($parteUno, '/'));
+            $le = localidadEvento::all()->find($idLEH);
+            return redirect()->route('admin.evento.localidadHorario.index', $le);
+        } else {
+            return redirect()->route('admin.evento.index');
+        }
     }
     public function localidadIndex(Evento $evento) //$id del Evento
     {
         $localidades = Localidad::all();
-
+        $locE=$evento->localidadesEvento;
         // return $evento->localidadesEvento;
-        return view('admin.localidad.index', compact('evento', 'localidades'));
+        return view('admin.localidad.index', compact('evento', 'localidades','locE'));
     }
     public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
     {

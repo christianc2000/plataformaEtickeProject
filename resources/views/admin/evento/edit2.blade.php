@@ -3,15 +3,15 @@
 @section('title', 'Dashboard')
 
 @section('content_header')
-    <h1>Editar Evento: {{$evento->title}}</h1>
+    <h1>Editar Evento: {{ $evento->title }}</h1>
 @stop
 
 @section('content')
     <div class="card">
-        <div class="card-body">
-            <form action="{{ route('admin.evento.update', $evento) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                @method('put')
+        <form action="{{ route('admin.evento.update', $evento) }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('put')
+            <div class="card-body">
                 <div class="container">
                     <div class="row g-2">
                         <div class="col-8">
@@ -60,7 +60,8 @@
                             <div class="card">
                                 <div class="card-body">
                                     @if (count($image) > 0 && $img != null)
-                                        <div class="cat container-img" style="overflow: hidden; background: gray" id="divPerfil">
+                                        <div class="cat container-img" style="overflow: hidden; background: gray"
+                                            id="divPerfil">
                                             <div id="{{ $img->id }}" class="cat container-img" name="perfil">
                                                 <img class="rounded" src="{{ asset($img->url) }}"
                                                     id="modal{{ $img->id }}" name='imagePrincipal' alt="">
@@ -75,7 +76,7 @@
                                         accept="image/*">
                                     <input id="json" name="json" type="text" hidden value="">
                                     @if (count($image) > 0)
-                                        <button type="button" class="btn btn-primary form-control my-0"
+                                        <button type="button" class="btn btn-info form-control my-0"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             data-bs-whatever="@mdo">Abrir Galeria</button>
                                     @else
@@ -89,120 +90,129 @@
                         <div class="col-5">
                         </div>
                         <div class="col-7">
-                            <a href="{{ route('admin.evento.index') }}" class="btn btn-danger mb-4">Cancelar</a>
-                            <a href="{{route('admin.evento.localidad.index',$evento)}}" class="btn btn-primary mb-4">Editar Localidad</a>
-                            <button class="btn btn-success mb-4" type="submit" name="guardar" id="guardar">Guardar</button>
+
                         </div>
 
                     </div>
                 </div>
-            </form>
-            {{-- MODAL --}}
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Galeria de Imágenes
-                            <div class="row">
-                                @if (count($image) == 0)
-                                    <div class="container-img">
-                                        <p> Galeria Vacía</p>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-lg-4 mb-2">
+                        <a href="{{ route('admin.evento.index') }}" class="form-control btn btn-danger mb-4">Cancelar</a>
+                    </div>
+                    <div class="col-lg-4 mb-2">
+                        <a href="{{ route('admin.evento.localidad.index', $evento) }}"
+                            class="form-control btn btn-warning mb-4">Editar
+                            Localidad</a>
+                    </div>
+                    <div class="col-lg-4 mb-2">
+                        <button class="form-control btn btn-primary mb-4" type="submit" name="guardar" id="guardar">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        {{-- MODAL --}}
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Galeria de Imágenes
+                        <div class="row">
+                            @if (count($image) == 0)
+                                <div class="container-img">
+                                    <p> Galeria Vacía</p>
+                                </div>
+                            @else
+                                @php
+                                    if (count($image) > 0) {
+                                        $img = $image->where('position_id', '=', 1)->first();
+                                    }
+                                @endphp
+                                {{-- Si es una imágen y no es position 1 sólo será visible --}}
+                                @if (empty($img))
+                                    @php
+                                        $img = $image->first();
+                                    @endphp
+                                    <div class="col-lg-4 mb-4" id="modal{{ $img->id }}">
+                                        <div class="px-3">
+                                            <input class="form-check-input" type="checkbox" id="modal{{ $img->id }}"
+                                                name="modalC" value="{{ $img->id }}">
+                                            <br>
+                                        </div>
+                                        <div class="cat container-img"
+                                            style="overflow: hidden; border: 3px solid; color:gray">
+                                            <img class="rounded zoom" src="{{ asset($img->url) }}"
+                                                id="image{{ $img->id }}" name='imageModal' alt="">
+                                        </div>
+                                        <div class="text-center">
+                                            <form action="{{ route('admin.images.update', $img->id) }}" method="POST">
+                                                @csrf
+                                                @method('put')
+                                                <button class="btn btn-success" type="submit">Imágen
+                                                    Principal</button>
+                                            </form>
+                                        </div>
+
                                     </div>
                                 @else
-                                    @php
-                                        if (count($image) > 0) {
-                                            $img = $image->where('position_id', '=', 1)->first();
-                                        }
-                                    @endphp
-                                    {{-- Si es una imágen y no es position 1 sólo será visible --}}
-                                    @if (empty($img))
-                                        @php
-                                            $img = $image->first();
-                                        @endphp
-                                        <div class="col-lg-4 mb-4" id="modal{{ $img->id }}">
-                                            <div class="px-3">
-                                                <input class="form-check-input" type="checkbox"
-                                                    id="modal{{ $img->id }}" name="modalC"
-                                                    value="{{ $img->id }}">
-                                                <br>
-                                            </div>
-                                            <div class="cat container-img"
-                                                style="overflow: hidden; border: 3px solid; color:gray">
-                                                <img class="rounded zoom" src="{{ asset($img->url) }}"
-                                                    id="image{{ $img->id }}" name='imageModal' alt="">
-                                            </div>
-                                            <div class="text-center">
-                                                <form action="{{ route('admin.images.update', $img->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('put')
-                                                    <button class="btn btn-success" type="submit">Imágen
-                                                        Principal</button>
-                                                </form>
-                                            </div>
-
-                                        </div>
-                                    @else
-                                        {{-- Si es una imágen y es position 1 será visible y enmarcada --}}
-                                        @foreach ($image as $i)
-                                            @if ($i->id == $img->id)
-                                                <!--Enmarca  a la Imagen seleccionada de Perfil-->
-                                                <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
-                                                    <div class="px-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="modal{{ $i->id }}" name="modalC"
-                                                            value="{{ $i->id }}">
-                                                        <br>
-                                                    </div>
-                                                    <div class="cat container-img"
-                                                        style="overflow: hidden; border: 10px solid; color: orange;">
-                                                        <img class="rounded zoom" src="{{ asset($i->url) }}"
-                                                            id="modal{{ $i->id }}" name='imageModal' alt="">
-                                                    </div>
+                                    {{-- Si es una imágen y es position 1 será visible y enmarcada --}}
+                                    @foreach ($image as $i)
+                                        @if ($i->id == $img->id)
+                                            <!--Enmarca  a la Imagen seleccionada de Perfil-->
+                                            <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
+                                                <div class="px-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="modal{{ $i->id }}" name="modalC"
+                                                        value="{{ $i->id }}">
+                                                    <br>
                                                 </div>
-                                            @else
-                                                <!--Muestra todas las demás imágnes-->
-                                                <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
-                                                    <div class="px-3">
-                                                        <input class="form-check-input" type="checkbox"
-                                                            id="modal{{ $i->id }}" name="modalC"
-                                                            value="{{ $i->id }}">
-                                                        <br>
-                                                    </div>
-                                                    <div class="cat container-img"
-                                                        style="overflow: hidden; border: 3px solid; color:gray">
-                                                        <img class="rounded zoom" src="{{ asset($i->url) }}"
-                                                            id="image{{ $i->id }}" name='imageModal' alt="">
-                                                    </div>
-                                                    <div class="text-center">
-                                                        <form action="{{ route('admin.images.update', $i->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('put')
-                                                            <button class="btn btn-success" type="submit">Imágen
-                                                                Principal</button>
-                                                        </form>
-                                                    </div>
-
+                                                <div class="cat container-img"
+                                                    style="overflow: hidden; border: 10px solid; color: orange;">
+                                                    <img class="rounded zoom" src="{{ asset($i->url) }}"
+                                                        id="modal{{ $i->id }}" name='imageModal' alt="">
                                                 </div>
-                                            @endif
-                                        @endforeach
-                                    @endif
+                                            </div>
+                                        @else
+                                            <!--Muestra todas las demás imágnes-->
+                                            <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
+                                                <div class="px-3">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="modal{{ $i->id }}" name="modalC"
+                                                        value="{{ $i->id }}">
+                                                    <br>
+                                                </div>
+                                                <div class="cat container-img"
+                                                    style="overflow: hidden; border: 3px solid; color:gray">
+                                                    <img class="rounded zoom" src="{{ asset($i->url) }}"
+                                                        id="image{{ $i->id }}" name='imageModal' alt="">
+                                                </div>
+                                                <div class="text-center">
+                                                    <form action="{{ route('admin.images.update', $i->id) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                        <button class="btn btn-success" type="submit">Imágen
+                                                            Principal</button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        @endif
+                                    @endforeach
                                 @endif
-                            </div>
+                            @endif
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            {{-- <a href="#" class="btn btn-success" id="guardarModal">Guardar</a> --}}
-                            <button type="button" class="btn btn-danger" id="eliminar">eliminar</button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        {{-- <a href="#" class="btn btn-success" id="guardarModal">Guardar</a> --}}
+                        <button type="button" class="btn btn-danger" id="eliminar">eliminar</button>
 
-                        </div>
                     </div>
                 </div>
             </div>
@@ -211,13 +221,19 @@
 @stop
 
 @section('css')
-    {{--<link rel="stylesheet" href="/css/admin_custom.css">--}}
+    {{-- <link rel="stylesheet" href="/css/admin_custom.css"> --}}
     <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <style>
         .modal-body {
             height: 450px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .card-body {
+            height: 400px;
             width: 100%;
             overflow-y: auto;
         }
@@ -264,7 +280,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $('#guardar').on('click',function(){
+            $('#guardar').on('click', function() {
                 let arrayI = [];
                 $('img[name=imageModal]').each(function() {
                     //images.push($(this).attr('src'));
@@ -293,20 +309,20 @@
                     $("div#" + idcheck).remove();
                     $("#" + id).remove();
                 });
-              /*  let arrayI = [];
-                $('img[name=imageModal]').each(function() {
-                    //images.push($(this).attr('src'));
-                    cad = $(this).attr('id');
-                    n = cad.length;
-                    cad = cad.substring(5, n);
-                    const tab = {
-                        id: cad,
-                        url: $(this).attr('src'),
-                    }
-                    arrayI.push(tab);
-                })
-                jsn = JSON.stringify(arrayI);
-                $("#json").val(jsn);*/
+                /*  let arrayI = [];
+                  $('img[name=imageModal]').each(function() {
+                      //images.push($(this).attr('src'));
+                      cad = $(this).attr('id');
+                      n = cad.length;
+                      cad = cad.substring(5, n);
+                      const tab = {
+                          id: cad,
+                          url: $(this).attr('src'),
+                      }
+                      arrayI.push(tab);
+                  })
+                  jsn = JSON.stringify(arrayI);
+                  $("#json").val(jsn);*/
             });
         });
     </script>

@@ -3,21 +3,21 @@
 @section('title', 'Localidad')
 
 @section('content_header')
-    <h1>Localidad - {{$evento->title}}</h1>
+    <h1>Localidad - {{ $evento->title }}</h1>
 @stop
 
 @section('content')
 
     <div class="card">
         <div class="card-header text-center">
-            LOCALIDADES
-        </div>
-        <div class="card-body">
+            <div>
+                <label for="" class="container-img" style="font-size: 20px">Localidad</label>
+            </div>
             <form action="{{ route('admin.evento.localidadEvento.store', $evento) }}" method="POST">
                 @csrf
                 <div class="row">
-                    <div class="col-6">
-                        <select name="localidad" id="localidad" name="localidad">
+                    <div class="col-lg-6">
+                        <select name="localidad" id="localidad" class="form-select">
                             <option value="" selected disabled>Seleccionar</option>
                             @foreach ($localidades as $l)
                                 <option value="{{ $l->nombreInfraestructura }}">{{ $l->nombreInfraestructura }}</option>
@@ -26,44 +26,57 @@
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
                         </select>
-
+                    </div>
+                    <div class="col-lg-3">
                         <button type="submit" id="addLocalidad" class="btn btn-primary">Añadir Localidad</a>
                     </div>
-                    <div class="col-3 mb-1">
-                        <button type="button" class="form-control btn btn-primary" data-bs-toggle="modal"
-                            data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap"
-                            style="background: greenyellow; color:black;">Crear
+                    <div class="col-lg-3">
+                        <button type="button" class="form-control btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Crear
                             Localidad</button>
                     </div>
                 </div>
             </form>
-            <br>
+        </div>
+        <div class="card-body">
             @php
                 
             @endphp
             <table id="tablaLocalidades" class="table table-striped shadow-lg mt-4" style="width:100%">
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>Localidad</th>
-                        <th>Estado</th>
-                        <th>Acciones</th>
+                        <th>fECHA CREACIÓN</th>
+                        <th>LOCALIDAD</th>
+                        <th>ESTADO</th>
+                        <th>ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($evento->localidadesEvento as $le)
+                    @foreach ($locE as $le)
                         <tr>
                             @php
                                 $localidad = $localidades->find($le->localidad_id);
                             @endphp
-                            <td>{{ $localidad->id }}</td>
+                            <td>{{ $le->created_at}}</td>
                             <td>{{ $localidad->nombreInfraestructura }}</td>
-                            <td></td>
+                            
+                                
+                                @if (count($le->horarios)==0)
+                                <td class="mb-2" >
+                                   <label for="" class="container-img" style="background: lightcoral">No configurado</label>
+                                </td>
+                                @else
+                                <td class="mb-2" >
+                                    <label for="" class="container-img" style="background: greenyellow">Si configurado</label>
+                                </td>
 
+                                @endif
+                            
                             <td>
                                 <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
 
-                                    <a href="{{route('admin.evento.localidadHorario.index',$le)}}" class="btn btn-warning">configurar</a>
+                                    <a href="{{ route('admin.evento.localidadHorario.index', $le) }}"
+                                        class="btn btn-warning">configurar</a>
                                     <a href="#" class="btn btn-dark">ver</a>
                                     @csrf
                                     @method('delete')
@@ -76,6 +89,14 @@
             </table>
 
 
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-4">
+                    <a href="{{ route('admin.evento.index') }}" class="form-control btn btn-danger">Salir</a>
+                </div>
+
+            </div>
         </div>
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <form action="{{ route('admin.evento.localidad.store', $evento) }}" method="POST"
@@ -153,19 +174,11 @@
 
             </form>
         </div>
-        <div class="card-footer">
-            <div class="row">
-                <div class="col-4">
-                    <a href="{{ route('admin.evento.index') }}" class="form-control btn btn-danger">Salir</a>
-                </div>
-
-            </div>
-        </div>
     </div>
 @stop
 
 @section('css')
- 
+
     <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -173,6 +186,12 @@
     <style>
         .modal-body {
             height: 350px;
+            width: 100%;
+            overflow-y: auto;
+        }
+
+        .card-body {
+            height: 400px;
             width: 100%;
             overflow-y: auto;
         }

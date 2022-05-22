@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Evento;
 use App\Models\Images;
+use App\Models\localidadEvento;
 use Illuminate\Http\Request;
 use Mockery\Generator\Method;
 use Psy\Readline\Hoa\EventSource;
@@ -106,18 +107,20 @@ class ImagesController extends Controller
         }
         $imag->position_id = 1;
         $imag->save();
-        //   return Evento::all()->find($imag->imageable_id)->image;
-        /*if ($imag->position_id != 1) {
-            $aux = Images::all()->where('position_id', '=', 1)->first();
-            $aux->position_id = 2;
-            $aux->save();
-            $imag->position_id = 1;
-            $imag->save();
-        }*/
-        $e = Evento::all()->find($imag->imageable_id);
-        //$img = $e->image;
-        // return $img;
-        return redirect()->route('admin.evento.edit', $evento);
+    //    return redirect()->route('admin.evento.edit', $evento);
+
+        $urlH=redirect()->getUrlGenerator()->previous();//URL de la anterior dirección en horarios
+        $n=strlen("http://127.0.0.1:8000/admin/evento/");
+        $idLEH=substr($urlH,$n,1);
+        $parteUno=substr($urlH,$n);
+        $idLEH=substr($parteUno,0,strpos($parteUno,'/'));
+        $le = localidadEvento::all()->find($idLEH);
+        if ("http://127.0.0.1:8000/admin/evento/".$le->id."/horario" == redirect()->getUrlGenerator()->previous()) {
+           
+            return redirect()->route('admin.evento.localidadHorario.index', $le);
+        } else {
+            return redirect()->route('admin.evento.edit', $evento);
+        }
     }
 
     /**

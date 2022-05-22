@@ -24,12 +24,12 @@ class HorarioController extends Controller
     }
     public function indexHorario(localidadEvento $le)
     {
-        $evento=Evento::all()->find($le->evento_id);
-        $localidad=Localidad::all()->find($le->localidad_id);
-        $categories=Category::all();
-        $horarios=$le->horarios;
-    
-        return view('admin.configurar.index',compact('le','evento','localidad','categories','horarios'));
+        $evento = Evento::all()->find($le->evento_id);
+        $localidad = Localidad::all()->find($le->localidad_id);
+        $categories = Category::all();
+        $horarios = $le->horarios;
+
+        return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'horarios'));
     }
     /**
      * Show the form for creating a new resource.
@@ -53,15 +53,15 @@ class HorarioController extends Controller
     }
     public function storeHorario(HorarioRequest $request, localidadEvento $le)
     {
-        
+
         Horario::create([
-            'fecha'=>$request->fecha,
-            'horaEvento'=>$request->horaEvento,
-            'duracion'=>$request->duración,
-            'localidad_evento_id'=>$le->id
+            'fecha' => $request->fecha,
+            'horaEvento' => $request->horaEvento,
+            'duracion' => $request->duración,
+            'localidad_evento_id' => $le->id
         ]);
 
-        return redirect()->route('admin.evento.localidadHorario.index',$le);
+        return redirect()->route('admin.evento.localidadHorario.index', $le);
     }
     /**
      * Display the specified resource.
@@ -96,7 +96,11 @@ class HorarioController extends Controller
     {
         //
     }
-
+    //actualizar un evento en el Horario
+    public function updateEventoHorario(Request $request, localidadEvento $le)
+    {
+        return redirect()->getUrlGenerator()->previous();
+    }
     /**
      * Remove the specified resource from storage.
      *
@@ -106,7 +110,7 @@ class HorarioController extends Controller
     public function deleteHorario(localidadEvento $le, Horario $h)
     {
         $h->delete();
-        return redirect()->route('admin.evento.localidadHorario.index',$le);
+        return redirect()->route('admin.evento.localidadHorario.index', $le);
     }
     public function destroy($id)
     {

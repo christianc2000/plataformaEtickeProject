@@ -14,6 +14,7 @@ Route::resource('horario',HorarioController::class)->names('admin.horario');
 Route::get('evento/{le}/horario',[HorarioController::class, 'indexHorario'])->name('admin.evento.localidadHorario.index');
 Route::post('evento/{le}/horario',[HorarioController::class, 'StoreHorario'])->name('admin.evento.localidadHorario.store');
 Route::delete('evento/{le}/{h}/horario',[HorarioController::class, 'deleteHorario'])->name('admin.evento.localidadHorario.delete');
+Route::put('evento/{le}/horario',[HorarioController::class, 'updateEventoHorario'])->name('admin.evento.localidadHorarioEvento.update');
 
 
 

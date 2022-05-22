@@ -39,8 +39,7 @@ class LocalidadController extends Controller
      */
     public function create($id)
     {
-        $evento_id = $id;
-        return view('admin.localidad.asignar', compact('evento_id'));
+        
     }
 
     /**
@@ -52,17 +51,7 @@ class LocalidadController extends Controller
     public function store(Request $request)
     {  //     	id 	ubicacion 	direccion 	nombre 	capacidad 	created_at 	updated_at 	
         //dd($request->all());
-        $response = Http::asForm()->post('http://127.0.0.1:9000/api/localidads', [
-            'nombre' => $request->name,
-            'ubicacion' => $request->gps,
-            'direccion' => $request->direction,
-            'telefono' => $request->phones,
-            'capacidad' => $request->capacidad,
-            'evento_id' => $request->evento_id
-        ]);
-
-        // dd($response->json());
-        return redirect()->route('admin.evento_localidad', $request->evento_id);
+       
     }
 
     /**

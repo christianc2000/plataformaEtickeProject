@@ -318,7 +318,7 @@
         })
     </script>
     <script>
-        console.log('Hi!');
+       
         //cambiar imagen
         document.getElementById('image').addEventListener('change', cambiarImagen);
 

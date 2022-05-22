@@ -3,7 +3,7 @@
 @section('title', 'Localidad')
 
 @section('content_header')
-    <h1>Localidad</h1>
+    <h1>Localidad - {{$evento->title}}</h1>
 @stop
 
 @section('content')
@@ -61,7 +61,7 @@
                             <td></td>
 
                             <td>
-                                <form action="{{ route('admin.evento.localidadEvento.delete', $le->id) }}" method="POST">
+                                <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
 
                                     <a href="#" class="btn btn-warning">configurar</a>
                                     <a href="#" class="btn btn-dark">ver</a>
@@ -165,7 +165,8 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+ 
+    <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
@@ -261,19 +262,19 @@
         defer></script>
     <script>
         $(document).ready(function() {
-        /*      $('#addLocalidad').click(function() {
-                  var localidad = $('select[id=localidad]').val();
-                  if (localidad != null) {
-                      var i = $("#tablaLocalidad tr").length - 1; //para contar las filas nuevas
-                      markup = "<tr><td>" + i + "</td><td>" + localidad +
-                          "</td><td>3</td><td>4</td></tr>" //para cear una fila con sus columnas requeridas
-                      tableBody = $("table tbody"); //para obtener el elemento table su tbody
-                      tableBody.append(
-                      markup); //append para añadir toda una fila con los valores de la variable markup
-                  }else{
-                      alert("Debe seleccionar una localidad");
-                  }
-              });*/
+            /*      $('#addLocalidad').click(function() {
+                      var localidad = $('select[id=localidad]').val();
+                      if (localidad != null) {
+                          var i = $("#tablaLocalidad tr").length - 1; //para contar las filas nuevas
+                          markup = "<tr><td>" + i + "</td><td>" + localidad +
+                              "</td><td>3</td><td>4</td></tr>" //para cear una fila con sus columnas requeridas
+                          tableBody = $("table tbody"); //para obtener el elemento table su tbody
+                          tableBody.append(
+                          markup); //append para añadir toda una fila con los valores de la variable markup
+                      }else{
+                          alert("Debe seleccionar una localidad");
+                      }
+                  });*/
         });
     </script>
     <script>
@@ -282,7 +283,7 @@
                 language: {
                     lengthMenu: 'Mostrar _MENU_ registros por página',
                     zeroRecords: 'No se encontró nada - lo siento',
-                    info: 'Mostrando la página _PAGE_ de _PAGES_', 
+                    info: 'Mostrando la página _PAGE_ de _PAGES_',
                     infoEmpty: 'No hay registros disponibles',
                     infoFiltered: '(filtrado de _MAX_ registros totales)',
                     search: "Buscar",

@@ -225,9 +225,8 @@ class EventoController extends Controller
         return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
     }
     //Eliminar un localidadEvento
-    public function localidadEventoDelete($id)
+    public function localidadEventoDelete(localidadEvento $le)
     {
-        $le = localidadEvento::all()->find($id);
         $evento = Evento::all()->find($le->evento_id);
         $le->delete();
         $localidades = Localidad::all();

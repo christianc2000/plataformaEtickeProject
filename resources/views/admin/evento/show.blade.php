@@ -76,7 +76,8 @@
 @stop
 
 @section('css')
-    <link rel="stylesheet" href="/css/admin_custom.css">
+    {{--<link rel="stylesheet" href="/css/admin_custom.css">--}}
+    <link rel="stylesheet" href="{{ URL::asset('css/app.css') }}">
     <style type="text/css">
         .transformacion1 {
             text-transform: capitalize;

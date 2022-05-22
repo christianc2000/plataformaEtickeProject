@@ -25,28 +25,6 @@
                     </tr>
                 </thead>
                 <tbody>
-
-                    @foreach ($eventos as $evento)
-                        <tr>
-                            <td scope="col">{{ $evento->id }}</td>
-                            <td scope="col">{{ $evento->title }}</td>
-                            <td scope="col">deshabilitado</td>
-                            <td>
-                                <form action="{{ route('admin.evento.destroy', $evento->id) }}" method="POST">
-                                    <a href="{{ route('admin.evento.show', $evento->id) }}"
-                                        class="btn btn-primary">Mostrar</a>
-                                    <a href="{{ route('admin.evento.edit', $evento) }}" class="btn btn-secondary">Editar</a>
-                                    <a href="{{ route('admin.evento.localidad.index', $evento) }}"
-                                        class="btn btn-warning">Localidad</a>
-                                    @csrf
-                                    <!--metodo para añadir token a un formulario-->
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-
                 </tbody>
             </table>
         </div>

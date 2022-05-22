@@ -90,7 +90,7 @@
                         </div>
                         <div class="col-7">
                             <a href="{{ route('admin.evento.index') }}" class="btn btn-danger mb-4">Cancelar</a>
-                            <a href="#" class="btn btn-primary mb-4">Editar Localidad</a>
+                            <a href="{{route('admin.evento.localidad.index',$evento)}}" class="btn btn-primary mb-4">Editar Localidad</a>
                             <button class="btn btn-success mb-4" type="submit" name="guardar" id="guardar">Guardar</button>
                         </div>
 

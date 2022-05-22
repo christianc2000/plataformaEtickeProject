@@ -63,7 +63,7 @@
                             <td>
                                 <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
 
-                                    <a href="#" class="btn btn-warning">configurar</a>
+                                    <a href="{{route('admin.evento.localidadHorario.index',$le)}}" class="btn btn-warning">configurar</a>
                                     <a href="#" class="btn btn-dark">ver</a>
                                     @csrf
                                     @method('delete')

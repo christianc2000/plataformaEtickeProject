@@ -3,12 +3,19 @@
 use App\Http\Controllers\Admin\EventoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\HorarioController;
 use App\Http\Controllers\Admin\ImagesController;
 use App\Http\Controllers\Admin\LocalidadController;
 
 Route::get('', [HomeController::class,'index'])->name('admin.index');
 Route::resource('evento',EventoController::class)->names('admin.evento');
 Route::resource('image', ImagesController::class)->names('admin.images');
+Route::resource('horario',HorarioController::class)->names('admin.horario');
+Route::get('evento/{le}/horario',[HorarioController::class, 'indexHorario'])->name('admin.evento.localidadHorario.index');
+Route::post('evento/{le}/horario',[HorarioController::class, 'StoreHorario'])->name('admin.evento.localidadHorario.store');
+Route::delete('evento/{le}/{h}/horario',[HorarioController::class, 'deleteHorario'])->name('admin.evento.localidadHorario.delete');
+
+
 
 Route::get('/evento/{evento}/localidad',[EventoController::class,'localidadIndex'])->name('admin.evento.localidad.index');
 Route::post('/evento/{evento}/localidad',[EventoController::class,'localidadStore'])->name('admin.evento.localidad.store');

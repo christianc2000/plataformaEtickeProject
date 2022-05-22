@@ -13,7 +13,13 @@ class localidadEvento extends Model
     public function localidad(){
         return $this->belongsTo(Localidad::class);
     }
+    //relación inversa de 1 a muchos
     public function evento(){
         return $this->belongsTo(Evento::class);
     }
+    //Relación de 1 a muchos
+    public function horarios(){
+        return $this->hasMany(Horario::class);
+    }
+
 }

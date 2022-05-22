@@ -68,7 +68,7 @@
 
                         <div class="col-7">
                             <a href="{{ route('admin.evento.index') }}" class="btn btn-danger mb-4">Cancelar</a>
-                            <button class="btn btn-primary mb-4" type="submit">Localidad</button>
+                            <button class="btn btn-primary mb-4" type="submit">Guardar</button>
                             @csrf
                             @method('post')
                         </div>

@@ -28,6 +28,7 @@ class EventoRequest extends FormRequest
             'description'=>'required',
             'category_id'=>'required',
             'image.*'   =>  'required|image|mimes:jpg,jpeg,bmp,png',
+            'json' => '',
             //'image.*'=>'required|image|mimes:png,jpg'
         ];
     }

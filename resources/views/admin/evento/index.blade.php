@@ -26,16 +26,18 @@
                 </thead>
                 <tbody>
 
-                    @foreach ($eventos as $e)
+                    @foreach ($eventos as $evento)
                         <tr>
-                            <td scope="col">{{ $e->id }}</td>
-                            <td scope="col">{{ $e->title }}</td>
+                            <td scope="col">{{ $evento->id }}</td>
+                            <td scope="col">{{ $evento->title }}</td>
                             <td scope="col">deshabilitado</td>
                             <td>
-                                <form action="{{ route('admin.evento.destroy', $e->id) }}" method="POST">
-                                    <a href="{{ route('admin.evento.show', $e->id) }}" class="btn btn-primary">Mostrar-Prueba</a>
-                                    <a href="{{ route('admin.evento.edit', $e->id) }}" class="btn btn-secondary">Editar</a>
-                                    <a href="{{route('admin.evento.localidad.index',$e)}}" class="btn btn-warning">Localidad</a>
+                                <form action="{{ route('admin.evento.destroy', $evento->id) }}" method="POST">
+                                    <a href="{{ route('admin.evento.show', $evento->id) }}"
+                                        class="btn btn-primary">Mostrar-Prueba</a>
+                                    <a href="{{ route('admin.evento.edit', $evento) }}" class="btn btn-secondary">Editar</a>
+                                    <a href="{{ route('admin.evento.localidad.index', $evento) }}"
+                                        class="btn btn-warning">Localidad</a>
                                     @csrf
                                     <!--metodo para añadir token a un formulario-->
                                     @method('delete')
@@ -66,7 +68,16 @@
     <script>
         console.log('Hi!');
         $(document).ready(function() {
-            $('#tabla').DataTable();
+            $('#tabla').DataTable({
+                language: {
+                    lengthMenu: 'Mostrar _MENU_ registros por página',
+                    zeroRecords: 'No se encontró nada - lo siento',
+                    info: 'Mostrando la página _PAGE_ de _PAGES_',
+                    infoEmpty: 'No hay registros disponibles',
+                    infoFiltered: '(filtrado de _MAX_ registros totales)',
+                    search: "Buscar",
+                },
+            });
         });
     </script>
 @stop

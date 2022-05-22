@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignId('position_id')->references('id')->on('positions');
             $table->unsignedBigInteger('imageable_id');
             $table->string('imageable_type');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

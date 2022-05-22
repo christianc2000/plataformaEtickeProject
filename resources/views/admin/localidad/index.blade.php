@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Dashboard')
+@section('title', 'Localidad')
 
 @section('content_header')
     <h1>Localidad</h1>
@@ -41,7 +41,7 @@
             @php
                 
             @endphp
-            <table id="tablaLocalidad" class="table table-striped shadow-lg mt-4" style="width:100%">
+            <table id="tablaLocalidades" class="table table-striped shadow-lg mt-4" style="width:100%">
                 <thead>
                     <tr>
                         <th>id</th>
@@ -81,7 +81,7 @@
             <form action="{{ route('admin.evento.localidad.store', $evento) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Crear Localidad</h5>
@@ -91,7 +91,24 @@
                         <div class="modal-body">
 
                             <div class="row">
-                                <div class="col-6">
+                                <div class="col-md-6">
+                                    <x-adminlte-input name="name" label="Nombre" />
+                                    <x-adminlte-input name="gps" label="Ubicacion Geografica" id="gps" />
+                                    <x-adminlte-input name="direction" label="Direccion" />
+                                    <x-adminlte-input name="phones" label="Telefonos" />
+                                    <x-adminlte-input name="capacidad" label="Capacidad" />
+                                    <x-adminlte-input name="evento_id" type="hidden" value="{{ $evento->id }}" />
+
+                                </div>
+
+                                <div class="col-md-6 mb-5">
+                                    <br>
+                                    <br>
+                                    <div class="cat container-img my-30">
+                                        <div id="map" style="height:300px; width: 300px;" class="form-control"></div>
+                                    </div>
+                                </div>
+                                {{-- <div class="col-6">
                                     <label for="recipient-name" class="col-form-label">Gps:</label>
                                     <input type="text" class="form-control" id="gpsLocalidad" name="gpsLocalidad">
                                     @error('gpsLocalidad')
@@ -122,7 +139,7 @@
                                             src="https://i.blogs.es/3ea7db/1366_2000-23-/450_1000.jpg" id=""
                                             name='imageModal' alt="">
                                     </div>
-                                </div>
+                                </div> --}}
                             </div>
 
 
@@ -201,11 +218,50 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
     <script>
-        console.log('Hi!');
+        let map;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: {
+                    lat: -17.7847635,
+                    lng: -63.1757515
+                },
+                center: {
+                    lat: {{ -17.7847635 }},
+                    lng: {{ -63.1757515 }}
+                },
+                zoom: 14,
+                scrollwheel: true,
+            });
+            const uluru = {
+                lat: -17.7847635,
+                lng: -63.1757515
+            };
+            let marker = new google.maps.Marker({
+                position: uluru,
+                map: map,
+                draggable: true
+            });
+            google.maps.event.addListener(marker, 'position_changed',
+                function() {
+                    let lat = marker.position.lat()
+                    let lng = marker.position.lng()
+                    $('#gps').val(lat + "," + lng)
+
+                })
+            google.maps.event.addListener(map, 'click',
+                function(event) {
+                    pos = event.latLng
+                    marker.setPosition(pos)
+                })
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8DaopxOLYwyY0gJV2fUky4_X99ZFwJY&callback=initMap" async
+        defer></script>
+    <script>
         $(document).ready(function() {
-            /*  $('#addLocalidad').click(function() {
+        /*      $('#addLocalidad').click(function() {
                   var localidad = $('select[id=localidad]').val();
                   if (localidad != null) {
                       var i = $("#tablaLocalidad tr").length - 1; //para contar las filas nuevas
@@ -218,6 +274,20 @@
                       alert("Debe seleccionar una localidad");
                   }
               });*/
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('#tablaLocalidades').DataTable({
+                language: {
+                    lengthMenu: 'Mostrar _MENU_ registros por página',
+                    zeroRecords: 'No se encontró nada - lo siento',
+                    info: 'Mostrando la página _PAGE_ de _PAGES_', 
+                    infoEmpty: 'No hay registros disponibles',
+                    infoFiltered: '(filtrado de _MAX_ registros totales)',
+                    search: "Buscar",
+                },
+            });
         });
     </script>
 @stop

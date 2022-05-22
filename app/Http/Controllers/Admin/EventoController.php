@@ -17,6 +17,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\support\Facades\Storage;
 
+use function PHPUnit\Framework\isNull;
 
 class EventoController extends Controller
 {
@@ -89,7 +90,7 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        return redirect()->route('admin.evento_localidad',$id);
+
         $evento = Evento::all()->find($id);
         $images = $evento->image;
         $img = $evento->image;
@@ -104,9 +105,10 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response]
      */
-    public function edit($id)
+    public function edit(Evento $evento)
     {
-        $evento = Evento::all()->find($id);
+
+
         $categories = Category::all();
         $image = $evento->image;
 
@@ -123,17 +125,41 @@ class EventoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EventoRequest $request, $id)
+    public function update(EventoRequest $request, Evento $evento)
     {
+        $imgE = $evento->image;
+        $e = Evento::all();
+        //  return $imgE->isEmpty();
+        if (!$imgE->isEmpty()) { //Si está vació las imágenes del evento no se podrá eliminar nada
+            $json = json_decode($request->json); //en array todas las imágenes que estén en la vistas, las que se eliminó no saldrán
+            $collection = collect($json); //en colección
+            //return $collection->pluck('id');
+            
+            if (count($imgE) == 1 && count($collection) == 0) {
+                $imgE->first()->delete();
+            } else {
+                if (count($imgE) != count($collection)) {
+                    if (count($collection) == 0) {
+                        foreach ($imgE as $im) {
+                            $im->delete();
+                        }
+                    } else {
+                        $pluckCollection=$collection->pluck('id');
+                        foreach ($imgE as $im) {
+                            if(!$pluckCollection->contains($im->id)){
+                                 $im->delete();
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-
-        //para aumentar imagenes
-
-        $c = Evento::all()->find($id);
-        $c->title = $request->title;
-        $c->description = $request->description;
-        $c->category_id = $request->category_id;
-        $c->save();
+        $evento->title = $request->title;
+        $evento->description = $request->description;
+        $evento->category_id = $request->category_id;
+        $evento->save();
+        //    $c->save();
 
         if ($request->hasFile('image')) {
             $imagenes = $request->file('image');
@@ -153,14 +179,14 @@ class EventoController extends Controller
                     $img = Images::create([
                         'position_id' => 1,
                         'url' => Arr::get($urli, 'url'),
-                        'imageable_id' => $c->id,
+                        'imageable_id' => $evento->id,
                         'imageable_type' => Evento::class,
                     ]);
                 } else {
                     $img = Images::create([
                         'position_id' => 2,
                         'url' => Arr::get($urli, 'url'),
-                        'imageable_id' => $c->id,
+                        'imageable_id' => $evento->id,
                         'imageable_type' => Evento::class,
                     ]);
                 }
@@ -178,12 +204,13 @@ class EventoController extends Controller
     }
     public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
     {
+
         Localidad::create(
             [
-                'ubicación' => $request->direccionLocalidad,
-                'gps' => $request->gpsLocalidad,
-                'nombreInfraestructura' => $request->nombreLocalidad,
-                'capacidadMaxima' => $request->capacidadLocalidad
+                'ubicación' => $request->direction,
+                'gps' => $request->gps,
+                'nombreInfraestructura' => $request->name,
+                'capacidadMaxima' => $request->capacidad
             ]
         );
         $localidades = Localidad::all();

@@ -54,12 +54,12 @@ class ImagesController extends Controller
             $url->url = substr($url->url, $n);
             $img = Images::all()->where('url', '=', $url->url)->first();
             foreach ($evento->image as $imag) {
-                if($imag!=$img){
+                if ($imag != $img) {
                     $imag->delete;
                 }
             }
         }
-        return redirect()->route('admin.evento.show',$evento);
+        return redirect()->route('admin.evento.show', $evento);
     }
 
     /**
@@ -95,19 +95,29 @@ class ImagesController extends Controller
     {
 
         $imag = Images::all()->find($id);
-
+        $evento = Evento::all()->find($imag->imageable_id);
+        $imagenes = $evento->image;
+        //return $imagenes;
+        $i = $imagenes->where('position_id', '=', 1)->first();
+       
+        if (!empty($i)) {
+            $i->position_id = 2;
+            $i->save();
+        }
+        $imag->position_id = 1;
+        $imag->save();
         //   return Evento::all()->find($imag->imageable_id)->image;
-        if ($imag->position_id != 1) {
+        /*if ($imag->position_id != 1) {
             $aux = Images::all()->where('position_id', '=', 1)->first();
             $aux->position_id = 2;
             $aux->save();
             $imag->position_id = 1;
             $imag->save();
-        }
+        }*/
         $e = Evento::all()->find($imag->imageable_id);
         //$img = $e->image;
         // return $img;
-        return redirect()->route('admin.evento.edit', $e);
+        return redirect()->route('admin.evento.edit', $evento);
     }
 
     /**

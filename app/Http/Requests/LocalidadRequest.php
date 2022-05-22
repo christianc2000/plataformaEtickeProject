@@ -24,10 +24,10 @@ class LocalidadRequest extends FormRequest
     public function rules()
     {
         return [
-            'gpsLocalidad'=>'required',
-            'nombreLocalidad'=>'required',
-            'direccionLocalidad'=>'required',
-            'capacidadLocalidad'=>'required'
+            'gps'=>'required',
+            'name'=>'required',
+            'direction'=>'required',
+            'capacidad'=>'required'
         ];
     }
 }

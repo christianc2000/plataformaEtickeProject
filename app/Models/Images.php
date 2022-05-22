@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Images extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
     protected $guarded = ['id', 'deleted_at','created_at', 'updated_at'];
    //protected $fillable=['url'];
    //relación polimorfica

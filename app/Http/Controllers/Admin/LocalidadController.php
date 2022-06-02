@@ -16,10 +16,14 @@ class LocalidadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Evento $evento)
     {
-        //
+        $localidades = Localidad::all();
+        $locE = $evento->localidadesEvento;
+        // return $evento->localidadesEvento;
+        return view('admin.localidad.index', compact('evento', 'localidades', 'locE'));
     }
+    
     public function index_evento_localidad($id)
     {
         $evento_id = $id;

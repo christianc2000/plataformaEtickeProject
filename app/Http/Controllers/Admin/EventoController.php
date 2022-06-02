@@ -11,9 +11,12 @@ use App\Models\Evento;
 use App\Models\Images;
 use App\Models\Localidad;
 use App\Models\localidadEvento;
+use App\Models\SeccionLocalidad;
+use App\Models\Telefono;
 use Illuminate\Http\Request;
 use Facade\FlareClient\Stacktrace\File;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Illuminate\support\Facades\Storage;
 
@@ -221,14 +224,13 @@ class EventoController extends Controller
     public function localidadIndex(Evento $evento) //$id del Evento
     {
         $localidades = Localidad::all();
-        $locE=$evento->localidadesEvento;
+        $locE = $evento->localidadesEvento;
         // return $evento->localidadesEvento;
-        return view('admin.localidad.index', compact('evento', 'localidades','locE'));
+        return view('admin.localidad.index', compact('evento', 'localidades', 'locE'));
     }
     public function localidadStore(LocalidadRequest $request, Evento $evento) //$id del Evento
     {
-
-        Localidad::create(
+        $l = Localidad::create(
             [
                 'ubicación' => $request->direction,
                 'gps' => $request->gps,
@@ -236,9 +238,53 @@ class EventoController extends Controller
                 'capacidadMaxima' => $request->capacidad
             ]
         );
+       
+            if ($request->phones1 != null) {
+                Telefono::create([
+                    'telefono' => $request->phones1,
+                    'localidad_id' => $l->id
+                ]);
+            }
+            if ($request->phones2 != null) {
+                Telefono::create([
+                    'telefono' => $request->phones2,
+                    'localidad_id' => $l->id
+                ]);
+            }
+           $sectores=$request->sectors;
+           $capacidades=$request->capacidads;
+           $colores=$request->colors;
+            for ($i=0; $i < count($sectores); $i++) { 
+                SeccionLocalidad::create([
+                    'nombre'=>$sectores[$i],
+                    'color'=>$colores[$i],
+                    'capacidadSector'=>$capacidades[$i],
+                    'localidad_id'=>$l->id                       
+                ]);
+            }
         $localidades = Localidad::all();
         return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
     }
+    public function localidadUpdate(Request $request, localidadEvento $le)
+    {
+        $request->validate([
+            "name" => 'required',
+            "gps" => 'required',
+            "direction" => 'required',
+            "phones" => 'required',
+            "capacidad" => 'required'
+        ]);
+        $localidad = Localidad::all()->find($le->localidad_id);
+        $localidad->nombreInfraestructura = $request->name;
+        $localidad->gps = $request->gps;
+        $localidad->ubicación = $request->direction;
+        $localidad->capacidadMaxima = $request->capacidad;
+        $localidad->save();
+        $evento = $le->evento_id;
+
+        return redirect()->route('admin.evento.localidadHorario.index', compact('le'));
+    }
+
     //Crear un localidadEvento
     public function localidadEventoStore(LocalidadEventoRequest $request, Evento $evento)
     {
@@ -266,7 +312,9 @@ class EventoController extends Controller
     {
 
         $evento = Evento::all()->find($id);
+        $e=$evento->title;
         $evento->delete();
+        Session::flash('evento_borrado','El evento '.$e.' ha sido eliminado con exito');
         return redirect()->route('admin.evento.index');
     }
 }

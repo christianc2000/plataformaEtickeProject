@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('localidad_eventos', function (Blueprint $table) {
+        Schema::create('seccion_localidads', function (Blueprint $table) {
             $table->id();
+            $table->string('nombre');
+            $table->string('color');
+            $table->unsignedInteger('capacidadSector');
             $table->foreignId('localidad_id')->references('id')->on('localidads');
-            $table->foreignId('evento_id')->references('id')->on('eventos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('localidad_eventos');
+        Schema::dropIfExists('seccion_localidads');
     }
 };

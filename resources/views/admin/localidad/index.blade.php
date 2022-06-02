@@ -10,28 +10,29 @@
 
     <div class="card">
         <div class="card-header text-center">
-            <div>
-                <label for="" class="container-img" style="font-size: 20px">Localidad</label>
-            </div>
-            <form action="{{ route('admin.evento.localidadEvento.store', $evento) }}" method="POST">
+            <form action="{{ route('admin.evento.localidadEvento.store', $evento) }}" method="POST"
+                enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-lg-6">
                         <select name="localidad" id="localidad" class="form-select">
-                            <option value="" selected disabled>Seleccionar</option>
+
+                            <option value="" selected disabled style="background: gray">Seleccionar Localidad</option>
                             @foreach ($localidades as $l)
-                                <option value="{{ $l->nombreInfraestructura }}">{{ $l->nombreInfraestructura }}</option>
+                                <option value="{{ $l->nombreInfraestructura }}">{{ $l->nombreInfraestructura }}
+                                </option>
                             @endforeach
                             @error('localidad')
                                 <small class="text-danger">{{ $message }}</small>
                             @enderror
+
                         </select>
                     </div>
                     <div class="col-lg-3">
-                        <button type="submit" id="addLocalidad" class="btn btn-primary">Añadir Localidad</a>
+                        <button type="submit" id="addLocalidad" class="form-control btn btn-primary">Añadir Localidad</a>
                     </div>
                     <div class="col-lg-3">
-                        <button type="button" class="form-control btn btn-success" data-bs-toggle="modal"
+                        <button type="button" class="form-control btn btn-success" data-bs-toggle="modal" id="btnCrear"
                             data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Crear
                             Localidad</button>
                     </div>
@@ -57,21 +58,22 @@
                             @php
                                 $localidad = $localidades->find($le->localidad_id);
                             @endphp
-                            <td>{{ $le->created_at}}</td>
+                            <td>{{ $le->created_at }}</td>
                             <td>{{ $localidad->nombreInfraestructura }}</td>
-                            
-                                
-                                @if (count($le->horarios)==0)
-                                <td class="mb-2" >
-                                   <label for="" class="container-img" style="background: lightcoral">No configurado</label>
-                                </td>
-                                @else
-                                <td class="mb-2" >
-                                    <label for="" class="container-img" style="background: greenyellow">Si configurado</label>
-                                </td>
 
-                                @endif
-                            
+
+                            @if (count($le->horarios) == 0)
+                                <td class="mb-2">
+                                    <label for="" class="container-img" style="background: lightcoral">No
+                                        configurado</label>
+                                </td>
+                            @else
+                                <td class="mb-2">
+                                    <label for="" class="container-img" style="background: greenyellow">Si
+                                        configurado</label>
+                                </td>
+                            @endif
+
                             <td>
                                 <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
 
@@ -113,56 +115,66 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <x-adminlte-input name="name" label="Nombre" />
-                                    <x-adminlte-input name="gps" label="Ubicacion Geografica" id="gps" />
-                                    <x-adminlte-input name="direction" label="Direccion" />
-                                    <x-adminlte-input name="phones" label="Telefonos" />
-                                    <x-adminlte-input name="capacidad" label="Capacidad" />
-                                    <x-adminlte-input name="evento_id" type="hidden" value="{{ $evento->id }}" />
-
-                                </div>
-
-                                <div class="col-md-6 mb-5">
+                                    <x-adminlte-input name="name" label="*Nombre" required />
+                                    <x-adminlte-input name="gps" label="*Ubicacion Geografica" id="gps"
+                                        onmousedown="return false;" onkeypress="return false;" required />
+                                    <x-adminlte-input name="direction" label="*Direccion" required />
+                                    <label class="">*Telefono 1</label>
+                                    <input name="phones1" type="number" id="phones1" class="form-control" required>
+                                    @error('phones1')
+                                        <small class="text-danger font-bold"
+                                            style="font-weight: bold;">{{ $message }}</small>
+                                    @enderror
                                     <br>
+                                    <label class="">Telefono 2</label>
+                                    <input name="phones2" type="number" id="phones2" class="form-control">
+                                    @error('phones2')
+                                        <small class="text-danger font-semibold"
+                                            style="font-weight: bold;">{{ $message }}</small>
+                                    @enderror
                                     <br>
-                                    <div class="cat container-img my-30">
-                                        <div id="map" style="height:300px; width: 300px;" class="form-control"></div>
+
+                                    <div class="container" style="background: #f5f5f5">
+                                        <label>*Capacidad Total</label>
+                                        <input name="capacidad" id="capacidad" class="form-control"
+                                            onmousedown="return false;" onkeypress="return false;" required>
+                                        <label for="" class="">Sectores</label>
+                                        <br>
+                                        <button id="btn_add" class="form-control btn btn-success" type="button"
+                                            style="width: 100px; color:white"><i class="fa fa-solid fa-plus"
+                                                style="color: white"></i></button>
+                                        <button id="btn_del" class="btn btn-default" type="button"
+                                            style="background: #D75B66; width: 100px; color:white"><i
+                                                class="fa fa-solid fa-trash" style="color: white"></i></button>
+                                        <button id="btn_delall" class="form-control btn btn-default" type="button"
+                                            style="background: #C05640; color:white; width: 120px"><i
+                                                class="fa fa-solid fa-folder-minus" style="color:white"></i></button>
+                                        <br>
+                                        <table id="tabla" class="table table-hover mt-1">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px">nro</th>
+                                                    <th style="width: 250px">Sector</th>
+                                                    <th style="width: 100px">Color</th>
+                                                    <th style="width: 150px">Capacidad</th>
+                                                    <th style="width: 50px"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
-                                {{-- <div class="col-6">
-                                    <label for="recipient-name" class="col-form-label">Gps:</label>
-                                    <input type="text" class="form-control" id="gpsLocalidad" name="gpsLocalidad">
-                                    @error('gpsLocalidad')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                    <label for="recipient-name" class="col-form-label">Nombre del lugar:</label>
-                                    <input type="text" class="form-control" id="nombreLocalidad" name="nombreLocalidad">
-                                    @error('nombreLocalidad')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                    <label for="recipient-name" class="col-form-label">Dirección:</label>
-                                    <input type="text" class="form-control" id="direccionLocalidad"
-                                        name="direccionLocalidad">
-                                    @error('direccionLocalidad')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                    <label for="recipient-name" class="col-form-label">Capacidad:</label>
-                                    <input type="number" class="form-control" id="capacidadLocalidad"
-                                        name="capacidadLocalidad">
-                                    @error('capacidadLocalidad')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="col-6">
-                                    <label for="message-text" class="col-form-label text-center">Mapa</label>
-                                    <div class="cat container-img" style="overflow: hidden; border: 3px solid; color:gray">
-                                        <img class="rounded zoom"
-                                            src="https://i.blogs.es/3ea7db/1366_2000-23-/450_1000.jpg" id=""
-                                            name='imageModal' alt="">
+
+                                <div class="col-lg-6 mb-5">
+                                    <div class="cat container-img"
+                                        style="height: 410px;width: 370px; overflow: hidden; border: 3px solid; color: darkgrey">
+                                        <div id="map" style="height:410px; width: 370px;" class="form-control rounded">
+                                        </div>
                                     </div>
-                                </div> --}}
+                                </div>
                             </div>
-
 
                         </div>
                         <div class="modal-footer">
@@ -183,9 +195,11 @@
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+        integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
     <style>
         .modal-body {
-            height: 350px;
+            height: 470px;
             width: 100%;
             overflow-y: auto;
         }
@@ -195,6 +209,7 @@
             width: 100%;
             overflow-y: auto;
         }
+
 
         .container-img {
             display: flex;
@@ -222,6 +237,37 @@
             width: auto;
         }
 
+        select {
+            color: blue;
+        }
+
+        option {
+            color: black;
+            background-color: lightblue;
+        }
+
+        #content {
+            position: absolute;
+            min-height: 50%;
+            width: 80%;
+            top: 20%;
+            left: 5%;
+        }
+
+        .selected {
+            cursor: pointer;
+        }
+
+        .selected:hover {
+            background-color: #0585C0;
+            color: white;
+        }
+
+        .seleccionada {
+            background-color: #0585C0;
+            color: white;
+        }
+
     </style>
 @stop
 @section('js')
@@ -237,6 +283,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
         let map;
@@ -280,21 +328,110 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8DaopxOLYwyY0gJV2fUky4_X99ZFwJY&callback=initMap" async
         defer></script>
     <script>
+        console.log("hola");
         $(document).ready(function() {
-            /*      $('#addLocalidad').click(function() {
-                      var localidad = $('select[id=localidad]').val();
-                      if (localidad != null) {
-                          var i = $("#tablaLocalidad tr").length - 1; //para contar las filas nuevas
-                          markup = "<tr><td>" + i + "</td><td>" + localidad +
-                              "</td><td>3</td><td>4</td></tr>" //para cear una fila con sus columnas requeridas
-                          tableBody = $("table tbody"); //para obtener el elemento table su tbody
-                          tableBody.append(
-                          markup); //append para añadir toda una fila con los valores de la variable markup
-                      }else{
-                          alert("Debe seleccionar una localidad");
-                      }
-                  });*/
+
+            $('#btn_add').click(function() {
+                agregar();
+                sumar();
+            });
+            $('#btn_del').click(function() {
+
+                eliminar(id_fila_selected);
+                if ($(".monto").val() != null) {
+                    sumar();
+                } else {
+                    $('#capacidad').val("");
+                }
+            });
+            $('#btn_delall').click(function() {
+                eliminarTodasFilas();
+                $('#capacidad').val("");
+            });
+            $('#capacidads').on('change', function() {
+                alert(this.value);
+            });
+
         });
+
+        var cont = 0;
+        var id_fila_selected = [];
+
+
+        function sumar() {
+            var total = 0;
+            $(".monto").each(function() {
+                if (isNaN(parseFloat($(this).val()))) {
+                    total += 0;
+                } else {
+                    total += parseFloat($(this).val());
+                }
+            });
+            //console.log(total);
+            $("#capacidad").val(total);
+        }
+
+        function agregar() {
+            cont++;
+
+            var fila = '<tr class="selected" id="fila' + cont + '" onclick="seleccionar(this.id);"><td>' +
+                cont +
+                '</td><td><input type="text" id="sectors" name="sectors[]" class="form-control" required></td><td><input name="colors[]" id="color" type="color" class="form-control" /></td><td><input type="number" id="capacidads" name="capacidads[]" class="form-control monto" min=0 value=0 onchange="sumar()" required></td><td></td></tr>';
+            $('#tabla').append(fila);
+            reordenar();
+        }
+
+        function removerArray(id_fila) {
+            var myIndex = id_fila_selected.indexOf(id_fila);
+            if (myIndex !== -1) {
+                id_fila_selected.splice(myIndex, 1);
+            }
+
+        }
+
+        function seleccionar(id_fila) {
+
+            if ($('#' + id_fila).hasClass('seleccionada')) {
+
+
+                removerArray(id_fila);
+                $('#' + id_fila).removeClass('seleccionada');
+
+            } else {
+                $('#' + id_fila).addClass('seleccionada');
+                id_fila_selected.push(id_fila);
+
+            }
+
+            //2702id_fila_selected=id_fila;
+
+
+        }
+
+        function eliminar(id_fila) {
+            /*$('#'+id_fila).remove();
+            reordenar();*/
+            for (var i = 0; i < id_fila.length; i++) {
+                $('#' + id_fila[i]).remove();
+
+            }
+
+            reordenar();
+        }
+
+        function reordenar() {
+            var num = 1;
+            $('#tabla tbody tr').each(function() {
+                $(this).find('td').eq(0).text(num);
+                num++;
+            });
+        }
+
+        function eliminarTodasFilas() {
+            $('#tabla tbody tr').each(function() {
+                $(this).remove();
+            });
+        }
     </script>
     <script>
         $(document).ready(function() {
@@ -308,6 +445,7 @@
                     search: "Buscar",
                 },
             });
+
         });
     </script>
 @stop

@@ -13,10 +13,10 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('localidad_eventos', function (Blueprint $table) {
+        Schema::create('telefonos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('telefono');
             $table->foreignId('localidad_id')->references('id')->on('localidads');
-            $table->foreignId('evento_id')->references('id')->on('eventos')->onDelete('cascade')->onUpdate('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('localidad_eventos');
+        Schema::dropIfExists('telefonos');
     }
 };

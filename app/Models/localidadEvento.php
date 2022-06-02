@@ -10,16 +10,23 @@ class localidadEvento extends Model
     use HasFactory;
     protected $guarded = ['id', 'created_at', 'updated_at'];
     //relación inversa de uno a muchos
-    public function localidad(){
+    public function localidad()
+    {
         return $this->belongsTo(Localidad::class);
     }
     //relación inversa de 1 a muchos
-    public function evento(){
+    public function evento()
+    {
         return $this->belongsTo(Evento::class);
     }
     //Relación de 1 a muchos
-    public function horarios(){
+    public function horarios()
+    {
         return $this->hasMany(Horario::class);
     }
-
+    //Relación de 1 a muchos
+    public function areas()
+    {
+        return $this->hasMany(Area::class);
+    }
 }

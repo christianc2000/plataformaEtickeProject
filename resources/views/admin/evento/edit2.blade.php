@@ -58,7 +58,7 @@
 
                         <div class="col-lg-4 mb-4">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body" style="max-height: 370px">
                                     @if (count($image) > 0 && $img != null)
                                         <div class="cat container-img" style="overflow: hidden; background: gray"
                                             id="divPerfil">
@@ -72,11 +72,11 @@
                                             <img src="https://www.agroworldspain.com/img/noimage.png" alt="...">
                                         </div>
                                     @endif
-                                    <input class="form-control my-2" type="file" id="image" name="image[]" multiple
+                                    <input class="form-control my-1" type="file" id="image" name="image[]" multiple
                                         accept="image/*">
                                     <input id="json" name="json" type="text" hidden value="">
                                     @if (count($image) > 0)
-                                        <button type="button" class="btn btn-info form-control my-0"
+                                        <button type="button" class="btn btn-info form-control"
                                             data-bs-toggle="modal" data-bs-target="#exampleModal"
                                             data-bs-whatever="@mdo">Abrir Galeria</button>
                                     @else
@@ -233,7 +233,7 @@
         }
 
         .card-body {
-            height: 400px;
+            height: 410px;
             width: 100%;
             overflow-y: auto;
         }

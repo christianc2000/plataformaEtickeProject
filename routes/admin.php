@@ -20,6 +20,8 @@ Route::put('evento/{le}/horario',[HorarioController::class, 'updateEventoHorario
 
 Route::get('/evento/{evento}/localidad',[EventoController::class,'localidadIndex'])->name('admin.evento.localidad.index');
 Route::post('/evento/{evento}/localidad',[EventoController::class,'localidadStore'])->name('admin.evento.localidad.store');
+Route::put('/evento/{le}/localidad',[EventoController::class,'localidadUpdate'])->name('admin.evento.localidad.update');
+
 Route::post('/evento/{evento}/localidadEvento',[EventoController::class,'localidadEventoStore'])->name('admin.evento.localidadEvento.store');
 Route::delete('/evento/{le}/localidadEventoDelete',[EventoController::class,'localidadEventoDelete'])->name('admin.evento.localidadEvento.delete');
 route::post('/evento/{evento}/eventolocalidad',[LocalidadController::class,'eventoLocalidadstore'])->name('admin.eventoLocalidad.store');

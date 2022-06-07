@@ -23,4 +23,5 @@ class Evento extends Model
     {
         return $this->hasMany(localidadEvento::class);
     }
+    
 }

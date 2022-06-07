@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ConfiguracionController;
 use App\Http\Controllers\Admin\EventoController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\HomeController;
@@ -10,12 +11,12 @@ use App\Http\Controllers\Admin\LocalidadController;
 Route::get('', [HomeController::class,'index'])->name('admin.index');
 Route::resource('evento',EventoController::class)->names('admin.evento');
 Route::resource('image', ImagesController::class)->names('admin.images');
-Route::resource('horario',HorarioController::class)->names('admin.horario');
-Route::get('evento/{le}/horario',[HorarioController::class, 'indexHorario'])->name('admin.evento.localidadHorario.index');
-Route::post('evento/{le}/horario',[HorarioController::class, 'StoreHorario'])->name('admin.evento.localidadHorario.store');
-Route::delete('evento/{le}/{h}/horario',[HorarioController::class, 'deleteHorario'])->name('admin.evento.localidadHorario.delete');
-Route::put('evento/{le}/horario',[HorarioController::class, 'updateEventoHorario'])->name('admin.evento.localidadHorarioEvento.update');
 
+
+Route::get('evento/{le}/configuracion',[ConfiguracionController::class, 'index'])->name('admin.eventoLocalidadConfiguracion.index');
+Route::post('evento/{le}/configuracion/Fecha',[ConfiguracionController::class, 'store'])->name('admin.eventoLocalidadConfiguracion.store');
+Route::post('evento/{le}/configuración/Area',[ConfiguracionController::class, 'storeArea'])->name('admin.eventoLocalidadConfiguracion.storeArea');
+Route::delete('evento/{le}/{f}/horario',[ConfiguracionController::class, 'deleteHorario'])->name('admin.eventoLocalidadConfiguracion.delete');
 
 
 Route::get('/evento/{evento}/localidad',[EventoController::class,'localidadIndex'])->name('admin.evento.localidad.index');
@@ -25,6 +26,7 @@ Route::put('/evento/{le}/localidad',[EventoController::class,'localidadUpdate'])
 Route::post('/evento/{evento}/localidadEvento',[EventoController::class,'localidadEventoStore'])->name('admin.evento.localidadEvento.store');
 Route::delete('/evento/{le}/localidadEventoDelete',[EventoController::class,'localidadEventoDelete'])->name('admin.evento.localidadEvento.delete');
 route::post('/evento/{evento}/eventolocalidad',[LocalidadController::class,'eventoLocalidadstore'])->name('admin.eventoLocalidad.store');
+
 
 //localidad API GOOGLE MAP
 /*Route::resource('localidad',LocalidadController::class)->names('admin.localidad');

@@ -13,12 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('horarios', function (Blueprint $table) {
+        Schema::create('fechas', function (Blueprint $table) {
             $table->id();
             $table->date('fecha');
-            $table->time('horaEvento');
+            $table->time('hora');
             $table->time('duracion');
-            $table->foreignId('localidad_evento_id')->references('id')->on('localidad_eventos');
+            $table->foreignId('localidad_evento_id')->references('id')->on('localidad_eventos')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('horarios');
+        Schema::dropIfExists('fechas');
     }
 };

@@ -288,9 +288,14 @@ class EventoController extends Controller
     //Crear un localidadEvento
     public function localidadEventoStore(LocalidadEventoRequest $request, Evento $evento)
     {
+       
+       
         $loc = Localidad::all()->where('nombreInfraestructura', '=', $request->localidad)->first();
-        localidadEvento::create(['localidad_id' => $loc->id, 'evento_id' => $evento->id]);
+       
+        $le=localidadEvento::create(['localidad_id' => $loc->id, 'evento_id' => $evento->id]);
+        
         $localidades = Localidad::all();
+   
         return redirect()->route('admin.evento.localidad.index', compact('evento', 'localidades'));
     }
     //Eliminar un localidadEvento

@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('areas', function (Blueprint $table) {
+        Schema::create('sector_areas', function (Blueprint $table) {
             $table->id();
-            $table->string('nombre');
-            $table->unsignedInteger('capacidad');
-            $table->unsignedInteger('nivel');
+            $table->foreignId('seccion_localidad_id')->references('id')->on('seccion_localidads');
+            $table->foreignId('area_id')->references('id')->on('areas');
+            $table->foreignId('localidad_evento_id')->references('id')->on('localidad_eventos');
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('areas');
+        Schema::dropIfExists('sector_areas');
     }
 };

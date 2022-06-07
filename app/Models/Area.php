@@ -9,14 +9,16 @@ class Area extends Model
 {
     use HasFactory;
     protected $guarded = ['id', 'created_at', 'updated_at'];
-    //relación de 1 a muchos inversa
-    public function seccionLocalidad()
-    {
-        return $this->belongsTo(seccionLocalidad::class);
+     // relación de 1 a muchos
+     public function sectorAreas(){
+        return $this->hasMany(sectorAreas::class);
     }
-    //relación de 1 a muchos inversa
-    public function localidadEventos()
-    {
-        return $this->belongsTo(localidadEvento::class);
+    //relación de 1 a muchos
+    public function cantidadAreasP(){
+        return $this->hasMany(cantidadArea::class, 'areaP_id');
+    }
+    //relación de 1 a muchos
+    public function cantidadAreasH(){
+        return $this->hasMany(cantidadArea::class, 'areaH_id');
     }
 }

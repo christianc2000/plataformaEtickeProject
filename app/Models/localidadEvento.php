@@ -20,13 +20,12 @@ class localidadEvento extends Model
         return $this->belongsTo(Evento::class);
     }
     //Relación de 1 a muchos
-    public function horarios()
+    public function fechas()
     {
-        return $this->hasMany(Horario::class);
+        return $this->hasMany(Fecha::class);
     }
-    //Relación de 1 a muchos
-    public function areas()
-    {
-        return $this->hasMany(Area::class);
+     // relación de 1 a muchos
+     public function sectorAreas(){
+        return $this->hasMany(SectorArea::class);
     }
 }

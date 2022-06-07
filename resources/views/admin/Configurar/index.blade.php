@@ -15,29 +15,23 @@
             </div>
 
             <div class="row">
-                
+
                 <div class="col-6">
                     <br>
-                    <div class="contenedor-botones mb-3">
-                        <!-- Button trigger modal -->
-                        <button type="button" class="boton seis" data-bs-toggle="modal" data-bs-target="#exampleModal" style="max-height: 50px">
-                            <span><i class="fa fa-duotone fa-pen-to-square mb-0" style="color: #0878A4"><label for=""
-                                     style="font-size: 12px" class="mx-2">Evento</label></i></span>
-                            <svg>
-                                <rect x="0" y="0" fill="none" style="stroke: #0878A4"></rect>
-                            </svg>
-                        </button>
-                        <button type="button" class="boton seis" data-bs-toggle="modal" id="editarLocalidad"
-                            name="editarLocalidad" data-bs-target="#localidadModal" style="max-height: 50px">
-                            <span><i class="fa fa-duotone fa-pen-to-square mb-0" style="color: white"><label
-                                        style="font-size: 12px" class="mx-2">Localidad</label></i></span>
-                            <svg>
-                                <rect x="0" y="0" fill="none" style="stroke: #0878A4"></rect>
+                    @if (count($le->sectorAreas) == 0)
+                        <div class="contenedor-botones mb-3">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="boton seis" data-bs-toggle="modal" data-bs-target="#area"
+                                style="max-height: 50px">
+                                <span><i class="fa fa-duotone fa-pen-to-square mb-0" style="color: white"><label for=""
+                                            style="font-size: 13px" class="mx-2">Area</label></i></span>
+                                <svg>
+                                    <rect x="0" y="0" fill="none" style="stroke: #72d4fa"></rect>
+                                </svg>
+                            </button>
+                        </div>
+                    @endif
 
-                            </svg>
-                        </button>
-                    </div>
-                   
                 </div>
                 <div class="col-lg-3"></div>
 
@@ -53,23 +47,34 @@
                 <div class="col-lg-12" style="border-top: 1px solid;color: gainsboro">
 
                 </div>
-                <form class="row" action="{{ route('admin.evento.localidadHorario.store', $le) }}"
+                <form class="row" action="{{ route('admin.eventoLocalidadConfiguracion.store', $le) }}"
                     method="POST">
                     @csrf
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <label for="" class="text-center font-bold">Fecha: </label>
                         <input type="date" id="fecha" name="fecha" class="form-control" required>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <label for="" class="text-center font-bold">Hora Inicio: </label>
                         <input type="time" id="horaEvento" name="horaEvento" class="form-control" required>
                     </div>
-                    <div class="col-lg-3">
-                        <label for="" class="text-center font-bold">Duración(hh:mm): </label>
+                    <div class="col-lg-2">
+                        <label for="" class="text-center font-bold">Duración: </label>
                         <input type="time" id="duración" name="duración" class="form-control" required>
                     </div>
-                    <div class="col-lg-3">
-                        <button type="submit" class="boton uno">
+                    @if (count($le->sectorAreas) == 0)
+                        <div class="col-lg-2">
+                            <label for="" class="text-center font-bold">Area: </label>
+                            <p class="form-control" style="background: rgb(225, 155, 155)">Sin Area</p>
+                        </div>
+                    @else
+                        <div class="col-lg-2">
+                            <label for="" class="text-center font-bold">Duración: </label>
+                            <label for="" class="form-control font-normal">Área por defecto</label>
+                        </div>
+                    @endif
+                    <div class="col-lg-4  container-img">
+                        <button type="submit" class="btn btn-primary form-control" style="height: 60px;">
                             <span>ADD</span>
                         </button>
                     </div>
@@ -88,14 +93,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($horarios as $h)
+                    @foreach ($fechas as $f)
                         <tr>
-                            <td scope="col">{{ $h->fecha }}</td>
-                            <td scope="col">{{ $h->horaEvento }}</td>
-                            <td scope="col">{{ $h->duracion }}</td>
+                            <td scope="col">{{ $f->fecha }}</td>
+                            <td scope="col">{{ $f->hora }}</td>
+                            <td scope="col">{{ $f->duracion }}</td>
                             <td scope="col">sin sección</td>
                             <td scope="col">
-                                <form action="{{ route('admin.evento.localidadHorario.delete', compact('le', 'h')) }}"
+                                <form
+                                    action="{{ route('admin.eventoLocalidadConfiguracion.delete', compact('le', 'f')) }}"
                                     method="post">
                                     @csrf
                                     @method('delete')
@@ -133,267 +139,89 @@
             </div>
         </div>
     </div>
-    @php
-    $image = $evento->image;
-    @endphp
-    <!-- MODAL EDITAR EVENTO -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    {{-- modal Area --}}
+    <div class="modal fade" id="area" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="container-img modal-title font-bold" id="exampleModalLabel">Editar - {{ $evento->title }}
-                    </h5>
+                <div class="modal-header text-center">
+                    <h5 class="modal-title " id="staticBackdropLabel">Areas -{{ $localidad->nombreInfraestructura }} -
+                        {{ $evento->title }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <form action="{{ route('admin.evento.update', $evento) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('put')
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row g-2">
-                                <div class="col-8">
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Título</label>
-                                        <input type="text" class="form-control" id="title" name="title"
-                                            value="{{ old('title', $evento->title) }}" placeholder="Título del evento"
-                                            required>
-                                        @error('title')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label">Descripción</label>
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="6" id="description" name="description"
-                                            required>{{ $evento->description }}</textarea>
-                                        @error('description')
-                                            <small class="text-danger">{{ $message }}</small>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="exampleFormControlTextarea1" class="form-label">Categoria: </label>
+
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-8">
+
+                        </div>
+                        <div class="col-lg-4">
+                            <label for="">Sector</label>
+
+                            <select class="form-control" aria-label="Default select example" id="Sectores"
+                                name="sectores_id">
+                                <option value="" disabled selected>Seleccionar</option>
+                                @foreach ($sectores as $s)
+                                    <option id="{{ $s->id }}sector" class="selectivo"
+                                        value={{ $s->id }}>{{ $s->nombre }}
+                                    </option>
+                                @endforeach
+                                <option id="mostrarTodo" value=0>Mostrar todo</option>
+                            </select>
+
+                        </div>
+
+                        <form id="form" action="{{ route('admin.eventoLocalidadConfiguracion.storeArea', $le) }}"
+                            method="POST">
+                            @csrf
+                            <input id="json" name="json" type="text" hidden value="">
+                            <div id="contenido">
+                                @foreach ($sectores as $s)
+                                    <div id="{{ $s->id }}content" class="contentSectores" hidden>
                                         <br>
-                                        <select class="form-control" aria-label="Default select example" id="category_id"
-                                            name="category_id" required>
-                                            <option value="" disabled>Seleccionar</option>
-                                            @foreach ($categories as $c)
-                                                <option value={{ $c->id }}
-                                                    {{ $c->id == $evento->category_id ? 'selected' : '' }}>
-                                                    {{ $c->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <label for="" style="text-transform:uppercase">{{ $s->nombre }}</label>
+                                        <br>
+                                        <button id="{{ $s->id }}btn_add" class="form-control btn btn-success buton"
+                                            type="button" style="width: 100px; color:white"><i class="fa fa-solid fa-plus"
+                                                style="color: white"></i></button>
+                                        <button id="{{ $s->id }}btn_del" class="btn btn-default" type="button"
+                                            style="background: #D75B66; width: 100px; color:white"><i
+                                                class="fa fa-solid fa-trash" style="color: white"></i></button>
+                                        <button id="{{ $s->id }}btn_delall" class="form-control btn btn-default"
+                                            type="button" style="background: #C05640; color:white; width: 120px"><i
+                                                class="fa fa-solid fa-folder-minus" style="color:white"></i></button>
+                                        <br>
+                                        <table id="{{ $s->id }}tabla" class="table table-striped table-hover mt-1"
+                                            style="width: 100%">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px">Nro</th>
+                                                    <th style="width: 250px">Nombre</th>
+                                                    <th style="width: 100px">Color</th>
+                                                    <th style="width: 100px">capacidad</th>
+                                                    <th style="width: 150px">Precio</th>
+                                                    <th style="width: 100px">Acción</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                                <!-- Imagen Principal-->
-                                @php
-                                    $img = $image->where('position_id', '=', 1)->first();
-                                @endphp
-                                <div class="col-lg-4 mb-4">
-                                    <div class="card">
-                                        <div class="card-body" style="height: 370px">
-                                            @if (count($image) > 0 && $img != null)
-                                                <div class="cat container-img" style="overflow: hidden; background: gray"
-                                                    id="divPerfil">
-                                                    <div id="{{ $img->id }}" class="cat container-img" name="perfil">
-                                                        <img class="rounded card-img-top" src="{{ asset($img->url) }}"
-                                                            id="modal{{ $img->id }}" name='imagePrincipal' alt="">
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="cat container-img" style="overflow: hidden; border">
-                                                    <img src="https://www.agroworldspain.com/img/noimage.png" alt="...">
-                                                </div>
-                                            @endif
-                                            <input class="form-control my-1" type="file" id="image" name="image[]" multiple
-                                                accept="image/*">
-                                            <input id="json" name="json" type="text" hidden value="">
-                                            @if (count($image) > 0)
-                                                {{-- <button type="button" class="btn btn-primary form-control my-0"
-                                                    data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                    data-bs-whatever="@mdo">Abrir Galeria</button> --}}
-                                                <button type="button" class="btn btn-primary form-control"
-                                                    data-toggle="modal" data-target="#test2">Galeria</button>
-                                            @else
-                                                <button class="btn btn-danger form-control" type="button"
-                                                    data-toggle="modal" data-target="#test2">Galeria Vacía</button>
-                                            @endif
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                </div>
+                                @endforeach
                             </div>
-                        </div>
+                            <button class="form-control btn btn-primary" type="button" id="btnGuardarSectores"
+                                name="btnGuardarSectores">Guardar</button>
 
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="submit" id="guardar" class="btn btn-primary">Actualizar</button>
-                    </div>
-                </form>
-                {{-- MODAL GALERIA --}}
-                <div class="modal fade" id="test2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Imágenes</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                    aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                Galeria de Imágenes
-                                <div class="row">
-                                    @if (count($image) == 0)
-                                        <div class="container-img">
-                                            <p> Galeria Vacía</p>
-                                        </div>
-                                    @else
-                                        @php
-                                            if (count($image) > 0) {
-                                                $img = $image->where('position_id', '=', 1)->first();
-                                            }
-                                        @endphp
-                                        {{-- Si es una imágen y no es position 1 sólo será visible --}}
-                                        @if (empty($img))
-                                            @php
-                                                $img = $image->first();
-                                            @endphp
-                                            <div class="col-lg-4 mb-4" id="modal{{ $img->id }}">
-                                                <div class="px-3">
-                                                    <input class="form-check-input" type="checkbox"
-                                                        id="modal{{ $img->id }}" name="modalC"
-                                                        value="{{ $img->id }}">
-                                                    <br>
-                                                </div>
-                                                <div class="cat container-img"
-                                                    style="overflow: hidden; border: 3px solid; color:gray">
-                                                    <img class="rounded zoom" src="{{ asset($img->url) }}"
-                                                        id="image{{ $img->id }}" name='imageModal' alt="">
-                                                </div>
-                                                <div class="text-center">
-                                                    <form action="{{ route('admin.images.update', $img->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button class="btn btn-success" type="submit">Imágen
-                                                            Principal</button>
-                                                    </form>
-                                                </div>
-
-                                            </div>
-                                        @else
-                                            {{-- Si es una imágen y es position 1 será visible y enmarcada --}}
-                                            @foreach ($image as $i)
-                                                @if ($i->id == $img->id)
-                                                    <!--Enmarca  a la Imagen seleccionada de Perfil-->
-                                                    <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
-                                                        <div class="px-3">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="modal{{ $i->id }}" name="modalC"
-                                                                value="{{ $i->id }}">
-                                                            <br>
-                                                        </div>
-                                                        <div class="cat container-img"
-                                                            style="overflow: hidden; border: 10px solid; color: orange;">
-                                                            <img class="rounded zoom" src="{{ asset($i->url) }}"
-                                                                id="modal{{ $i->id }}" name='imageModal' alt="">
-                                                        </div>
-                                                    </div>
-                                                @else
-                                                    <!--Muestra todas las demás imágenes-->
-                                                    <div class="col-lg-4 mb-4" id="modal{{ $i->id }}">
-                                                        <div class="px-3">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                id="modal{{ $i->id }}" name="modalC"
-                                                                value="{{ $i->id }}">
-                                                            <br>
-                                                        </div>
-                                                        <div class="cat container-img"
-                                                            style="overflow: hidden; border: 3px solid; color:gray">
-                                                            <img class="rounded zoom" src="{{ asset($i->url) }}"
-                                                                id="image{{ $i->id }}" name='imageModal' alt="">
-                                                        </div>
-                                                        <div class="text-center">
-                                                            <form action="{{ route('admin.images.update', $i->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('put')
-                                                                <button class="btn btn-success" type="submit">Imágen
-                                                                    Principal</button>
-                                                            </form>
-                                                        </div>
-
-                                                    </div>
-                                                @endif
-                                            @endforeach
-                                        @endif
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                {{-- <a href="#" class="btn btn-success" id="guardarModal">Guardar</a> --}}
-                                <button type="button" class="btn btn-danger" id="eliminar">eliminar</button>
-
-                            </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-    {{-- MODAL EDITAR LOCALIDAD --}}
-    <div class="modal fade" id="localidadModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Editar Localidad - {{ $evento->title }}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
                 </div>
 
-                <form action="{{ route('admin.evento.localidad.update', $le) }}" method="POST"
-                    enctype="multipart/form-data">
-                    @csrf
-                    @method('put')
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label for="">Nombre</label>
-                                <br>
-                                <input name="name" id="name" class="form-control"
-                                    value="{{ old('title', $localidad->nombreInfraestructura) }}" />
-                                <label for="">Ubicacion Geografica</label>
-                                <input name="gps" id="gps" class="form-control"
-                                    value="{{ old('gps', $localidad->gps) }}" readonly onmousedown="return false;" />
-                                <label for="">Dirección</label>
-                                <input name="direction" id="direction" class="form-control"
-                                    value="{{ old('ubicación', $localidad->ubicación) }}" />
-                                <label for="">Teléfono</label>
-                                <input name="phones" id="phones" class="form-control" type="number" value="77383487">
-                                <label for="">Capacidad</label>
-                                <input name="capacidad" id="capacidad" class="form-control" type="number"
-                                    value="{{ old('capacidadMaxima', $localidad->capacidadMaxima) }}" />
-                                <input type="text" id="longitud" hidden value="">
-                                <input type="text" id="latitud" hidden value="">
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="cat container-img"
-                                    style="height: 390px;width: 370px; overflow: hidden; border: 3px solid; color: darkgrey">
-                                    <div id="map" style="height:390px; width: 370px;" class="form-control rounded"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success" id="Actualizar">Actualizar</button>
-
-                    </div>
-                </form>
             </div>
         </div>
     </div>
@@ -570,61 +398,6 @@
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script>
-        var cad = $('#gps').val();
-        var index = cad.indexOf(',');
-        var longitud = cad.substring(0, index);
-        var latitud = cad.substring(index + 1, cad.length);
-        $('#longitud').val(longitud);
-        $('#latitud').val(latitud);
-        //alert("longitud: "+$('#longitud').val());
-        //alert("latitud: "+$('#latitud').val());
-        let map;
-
-        function initMap() {
-            var longi = document.getElementById("latitud").value.substring(0, 11);
-            var lati = document.getElementById("longitud").value.substring(0, 11);
-            map = new google.maps.Map(document.getElementById("map"), {
-
-                center: {
-                    lat: -17.783725227247068,
-                    lng: -63.18050197649233
-                },
-                center: {
-                    lat: {{ -17.783725227247068 }},
-                    lng: {{ -63.18050197649233 }}
-                },
-                zoom: 14,
-                scrollwheel: true,
-            });
-
-            const uluru = {
-                lat: -17.783725227247068,
-                lng: -63.18050197649233
-            };
-            uluru.lat = parseFloat(lati);
-            uluru.lng = parseFloat(longi);
-            let marker = new google.maps.Marker({
-                position: uluru,
-                map: map,
-                draggable: true
-            });
-            google.maps.event.addListener(marker, 'position_changed',
-                function() {
-                    let lat = marker.position.lat();
-                    let lng = marker.position.lng();
-                    $('#gps').val(lat + "," + lng);
-
-                });
-            google.maps.event.addListener(map, 'click',
-                function(event) {
-                    pos = event.latLng
-                    marker.setPosition(pos)
-                })
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8DaopxOLYwyY0gJV2fUky4_X99ZFwJY&callback=initMap" async
-        defer></script>
-    <script>
         $(document).ready(function() {
             $('#tablaConfigurar').DataTable({
                 language: {
@@ -640,50 +413,117 @@
     </script>
     <script>
         $(document).ready(function() {
-            $('#guardar').on('click', function() {
-                let arrayI = [];
-                $('img[name=imageModal]').each(function() {
-                    //images.push($(this).attr('src'));
-                    cad = $(this).attr('id');
-                    n = cad.length;
-                    cad = cad.substring(5, n);
-                    const tab = {
-                        id: cad,
-                        url: $(this).attr('src'),
-                    }
-                    arrayI.push(tab);
-                })
-                jsn = JSON.stringify(arrayI);
-                $("#json").val(jsn);
-            });
-            $('#eliminar').on('click', function() {
-                let array = [];
-                $('input[type=checkbox][name=modalC]:checked').each(function() {
-                    // alert($(this).attr("value"));
-                    var id = $(this).attr("value");
+            n = $('#Sectores option').length - 1;
+            select = [];
 
-                    var idcheck = "modal" + $(this).attr("value");
-                    //var src = $('#image' + id).attr("src");
-                    // images.push(src);
-                    array.push(idcheck);
-                    $("div#" + idcheck).remove();
-                    $("#" + id).remove();
+            $("#Sectores").change(function() {
+                vid = $("#Sectores :selected").val();
+
+                if (select.length > 0) {
+                    // oculta todas las tablas al momento de cambiar de option seleccionado            
+                    while (0 < select.length) {
+                        $("#" + select[select.length - 1]).prop('hidden', true);
+                        select.pop();
+                    }
+                }
+                if (vid > 0) {
+                    //todo lo que tiene que ver con un sector y las areas creadas para ese sector
+                    $("#" + vid + "content").prop('hidden', false);
+                    select.push(vid + "content");
+                } else {
+                    //Muestra todas las tablas 
+                    $('.selectivo').each(function() {
+                        vid = $(this).val();
+                        $("#" + vid + "content").prop('hidden', false); //quita el oculto del div
+                        select.push(vid + "content");
+                    });
+                }
+            });
+            //al momento de guardar el modal de areas
+            $('#btnGuardarSectores').on('click', function() {
+                let tabla = [];
+                let contenido = [];
+                contenido=[];
+                $('.contentSectores').each(function() {
+                    event.preventDefault();
+                    var regex = /(\d+)/g;
+                    idT = $(this).find('table').attr('id');
+                    nroT = idT.match(regex);
+                    $('#' + idT + ' tbody tr').each(function() {
+                        Fila = $(this).attr('id');
+                        
+                        nroF = Fila.match(regex);
+                        const tab = {
+                            nombre: $(this).find('input[id=' + nroF + 'nombre' + nroT +
+                                ']').val(),
+                            color: $(this).find('input[id=' + nroF + 'color' + nroT +
+                                ']').val(),
+                            capacidad: $(this).find('input[id=' + nroF + 'capacidad' +
+                                nroT + ']').val(),
+                            precio: $(this).find('input[id=' + nroF + 'precio' + nroT +
+                                ']').val(),
+                        }
+                        contenido.push(tab);
+                    });
+                    let copia = contenido;
+                    contenido=[];
+                    const cont = {
+                        id: nroT,
+                        content: copia
+                    }
+                    tabla.push(cont);
+
                 });
-                /*  let arrayI = [];
-                  $('img[name=imageModal]').each(function() {
-                      //images.push($(this).attr('src'));
-                      cad = $(this).attr('id');
-                      n = cad.length;
-                      cad = cad.substring(5, n);
-                      const tab = {
-                          id: cad,
-                          url: $(this).attr('src'),
-                      }
-                      arrayI.push(tab);
-                  })
-                  jsn = JSON.stringify(arrayI);
-                  $("#json").val(jsn);*/
+                jsn = JSON.stringify(tabla);
+                $("#json").val(jsn);
+                $( "#form" ).submit();
             });
         });
+
+        $(document).on('click', '.borrar', function(event) {
+            event.preventDefault();
+            //     nroFila=$(this).closest('tr').attr('id');
+            idT = $(this).closest('tr').attr('name');
+            // alert(idT);
+            $(this).closest('tr').remove();
+            reordenarF(idT);
+        });
+        //boton add para cada contenido, funcion que escucha cuando se le da click a un elemento con la clase .buton
+        $(document).on('click', '.buton', function(event) {
+            event.preventDefault();
+            idDivContent = $(this).closest('div').attr('id');
+            var regex = /(\d+)/g;
+            vid = idDivContent.match(regex);
+            nroFila = $('#' + vid + 'tabla tr').length;
+            agregar(vid, nroFila);
+        });
+
+        function agregar(id, nroFila) {
+
+            inputNombre = '<input id="' + nroFila + 'nombre' + id + '" class="form-control nro" type="text" required>';
+            inputColor = '<input id="' + nroFila + 'color' + id + '" class="form-control nro" type="color" required>';
+            inputCapacidad = '<input id="' + nroFila + 'capacidad' + id +
+                '"  class="form-control nro" type="number" required>';
+            inputPrecio = '<input id="' + nroFila + 'precio' + id + '" class="form-control nro" type="number" required>';
+            btnEliminar = '<button class="btn btn-danger borrar" id="' + nroFila + 'btnEliminar' + id +
+                '" name="buttonTabla">Eliminar</button>';
+            var fila = '<tr id="' + nroFila + 'fila" name="' + id + 'tabla"><td>' + nroFila + '</td><td>' + inputNombre +
+                '</td><td>' +
+                inputColor + '</td><td>' + inputCapacidad + '</td><td>' +
+                inputPrecio + '</td><td>' + btnEliminar + '</td></tr>';
+            $('#' + id + 'tabla').append(fila);
+        }
+
+        function reordenarF(idT) {
+            //var regex = /(\d+)/g;
+            var num = 1;
+            //  var nroF=nrofila.match(regex);
+            // var id=idT.match(regex);
+            $('#' + idT + ' tbody tr').each(function() {
+                $(this).find('td').eq(0).text(num);
+                num++;
+            });
+        }
     </script>
+
 @stop

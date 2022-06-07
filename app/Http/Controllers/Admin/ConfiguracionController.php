@@ -6,31 +6,32 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\HorarioRequest;
 use App\Models\Category;
 use App\Models\Evento;
+use App\Models\Fecha;
 use App\Models\Horario;
 use App\Models\Localidad;
 use App\Models\localidadEvento;
+use App\Models\SeccionLocalidad;
+use App\Models\SectorArea;
 use Illuminate\Http\Request;
 
-class HorarioController extends Controller
+class ConfiguracionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        //
-    }
-    public function indexHorario(localidadEvento $le)
+    public function index(localidadEvento $le)
     {
         $evento = Evento::all()->find($le->evento_id);
         $localidad = Localidad::all()->find($le->localidad_id);
         $categories = Category::all();
-        $horarios = $le->horarios;
-
-        return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'horarios'));
+        $fechas = $le->fechas;
+        $sectorareas = $le->sectorAreas;
+        $sectores=$localidad->seccionLocalidads;
+        return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'fechas','sectorareas','sectores'));
     }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -47,21 +48,19 @@ class HorarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeArea(Request $request, localidadEvento $le)
     {
-        //
+       return json_decode($request->json);
+    
+       
     }
-    public function storeHorario(HorarioRequest $request, localidadEvento $le)
+
+    public function store(Request $request, localidadEvento $le)
     {
+        
+        
 
-        Horario::create([
-            'fecha' => $request->fecha,
-            'horaEvento' => $request->horaEvento,
-            'duracion' => $request->duración,
-            'localidad_evento_id' => $le->id
-        ]);
-
-        return redirect()->route('admin.evento.localidadHorario.index', $le);
+        return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
     /**
      * Display the specified resource.
@@ -92,12 +91,7 @@ class HorarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-    //actualizar un evento en el Horario
-    public function updateEventoHorario(Request $request, localidadEvento $le)
+    public function update(Request $request, localidadEvento $le)
     {
         return redirect()->getUrlGenerator()->previous();
     }
@@ -107,11 +101,12 @@ class HorarioController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function deleteHorario(localidadEvento $le, Horario $h)
+    public function deleteHorario(localidadEvento $le, Fecha $f)
     {
-        $h->delete();
-        return redirect()->route('admin.evento.localidadHorario.index', $le);
+        $f->delete();
+        return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
+
     public function destroy($id)
     {
         //

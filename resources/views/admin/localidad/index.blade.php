@@ -45,11 +45,15 @@
             @endphp
             <table id="tablaLocalidades" class="table table-striped shadow-lg mt-4" style="width:100%">
                 <thead>
-                    <tr>
-                        <th>fECHA CREACIÓN</th>
-                        <th>LOCALIDAD</th>
-                        <th>ESTADO</th>
-                        <th>ACCIONES</th>
+                    <tr style="height: 30px">
+                        <th style="width: 150px;
+                        word-wrap: break-word;">FECHA CREACIÓN</th>
+                        <th style="width: 300px;
+                        word-wrap: break-word;">LOCALIDAD</th>
+                        <th style="width: 100px;
+                        word-wrap: break-word;">ESTADO</th>
+                        <th style="width: 300px;
+                            word-wrap: break-word;">ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,28 +66,31 @@
                             <td>{{ $localidad->nombreInfraestructura }}</td>
 
 
-                            @if (count($le->horarios) == 0)
+                            @if (count($le->fechas) == 0)
                                 <td class="mb-2">
-                                    <label for="" class="container-img" style="background: lightcoral">No
-                                        configurado</label>
+                                    <label for="" class="text-center" style="background: lightcoral; width: 100px">Sin horario</label>
                                 </td>
                             @else
                                 <td class="mb-2">
-                                    <label for="" class="container-img" style="background: greenyellow">Si
-                                        configurado</label>
+                                    <label for="" class="text-center" style="background: greenyellow; width: 100px">
+                                        Con horario</label>
                                 </td>
                             @endif
 
                             <td>
-                                <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
-
-                                    <a href="{{ route('admin.evento.localidadHorario.index', $le) }}"
-                                        class="btn btn-warning">configurar</a>
-                                    <a href="#" class="btn btn-dark">ver</a>
-                                    @csrf
-                                    @method('delete')
-                                    <button type="submit" class="btn btn-danger">Eliminar</button>
-                                </form>
+                                <div class="row">
+                                    <form action="{{ route('admin.evento.localidadEvento.delete', $le) }}" method="POST">
+                                     {{--configurar--}}   <a href="{{ route('admin.eventoLocalidadConfiguracion.index', $le) }}"
+                                            class="btn btn-warning" style="width: 100px"><i
+                                                class="fa fa-solid fa-gears"></i></a>
+                                    {{--ver--}}  <a href="#" class="btn btn-info" style="width: 100px"><i
+                                                class="fa fa-thin fa-eye"></i></a>
+                                        @csrf
+                                        @method('delete')
+                                    {{--eliminar--}}    <button type="submit" class="btn btn-danger" style="width: 100px"><i
+                                                class="fa fa-solid fa-trash"></i></button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     @endforeach
@@ -197,6 +204,7 @@
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
         integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
     <style>
         .modal-body {
             height: 470px;
@@ -328,7 +336,7 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAl8DaopxOLYwyY0gJV2fUky4_X99ZFwJY&callback=initMap" async
         defer></script>
     <script>
-        console.log("hola");
+
         $(document).ready(function() {
 
             $('#btn_add').click(function() {

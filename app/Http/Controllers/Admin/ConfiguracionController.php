@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HorarioRequest;
+use App\Models\Area;
 use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Fecha;
@@ -28,8 +29,8 @@ class ConfiguracionController extends Controller
         $categories = Category::all();
         $fechas = $le->fechas;
         $sectorareas = $le->sectorAreas;
-        $sectores=$localidad->seccionLocalidads;
-        return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'fechas','sectorareas','sectores'));
+        $sectores = $localidad->seccionLocalidads;
+        return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'fechas', 'sectorareas', 'sectores'));
     }
 
     /**
@@ -50,17 +51,50 @@ class ConfiguracionController extends Controller
      */
     public function storeArea(Request $request, localidadEvento $le)
     {
-       return json_decode($request->json);
-    
+        $s = json_decode($request->json, true);
+        $sectors = collect($s);
        
+      /*  $p = collect($sectors->first());
+        $p = collect($p->last());
+        $p = $p->first();
+        return $p['nombre'];*/
+        $seccionLocalidad = 0;
+        foreach ($sectors as $sector) {
+            $sector=collect($sector);
+            $n = 1;
+            foreach ($sector as $areas) {
+                $areas=collect($areas);
+                
+                if ($n==1) {
+                    $n++;
+                    $seccionLocalidad = (int)$areas->first();
+                } else {
+                    $areas=$areas->first();
+                  
+                    $a = Area::create([
+                        'nombre' => $areas['nombre'],
+                        'capacidad' => $areas['capacidad'],
+                        'nivel' => 1
+                    ]);
+                  
+                    $sa = SectorArea::create([
+                        'seccion_localidad_id' => $seccionLocalidad,
+                        'area_id' => $a->id,
+                        'localidad_evento_id' => $le->id
+                    ]);
+                   
+                }
+            }
+           return redirect()->route('admin.eventoLocalidadConfiguracion.index',$le);
+        }
     }
 
     public function store(Request $request, localidadEvento $le)
     {
-        
-        
 
-        return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
+
+
+      //  return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
     /**
      * Display the specified resource.

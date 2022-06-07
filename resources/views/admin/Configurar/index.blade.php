@@ -69,8 +69,8 @@
                         </div>
                     @else
                         <div class="col-lg-2">
-                            <label for="" class="text-center font-bold">Duración: </label>
-                            <label for="" class="form-control font-normal">Área por defecto</label>
+                            <label for="" class="text-center font-bold">Area: </label>
+                            <p class="form-control" style="background: rgb(137, 245, 200)">Area por defecto</p>
                         </div>
                     @endif
                     <div class="col-lg-4  container-img">

@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('sector_areas', function (Blueprint $table) {
             $table->id();
+            $table->decimal('precio',8,2);
+            $table->string('color');
             $table->foreignId('seccion_localidad_id')->references('id')->on('seccion_localidads');
             $table->foreignId('area_id')->references('id')->on('areas');
             $table->foreignId('localidad_evento_id')->references('id')->on('localidad_eventos');

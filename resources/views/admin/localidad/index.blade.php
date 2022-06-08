@@ -14,12 +14,12 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="row">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <select name="localidad" id="localidad" class="form-select">
 
                             <option value="" selected disabled style="background: gray">Seleccionar Localidad</option>
                             @foreach ($localidades as $l)
-                                <option value="{{ $l->nombreInfraestructura }}">{{ $l->nombreInfraestructura }}
+                                <option value="{{ $l->nombreInfraestructura }}" id="{{$l->capacidadMaxima}}">{{ $l->nombreInfraestructura }}
                                 </option>
                             @endforeach
                             @error('localidad')
@@ -28,10 +28,17 @@
 
                         </select>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-1">
+                        <label for="" class="mt-2"  style="align-items: center">Capacidad: </label>     
+                    </div>
+                    <div class="col-lg-2">
+                        <label class="form-control" id="capacidadLocal">0</label>
+                    </div>
+                    <div class="col-lg-1"></div>
+                    <div class="col-lg-2">
                         <button type="submit" id="addLocalidad" class="form-control btn btn-primary">Añadir Localidad</a>
                     </div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-2">
                         <button type="button" class="form-control btn btn-success" data-bs-toggle="modal" id="btnCrear"
                             data-bs-target="#exampleModal" data-bs-whatever="@getbootstrap">Crear
                             Localidad</button>
@@ -359,7 +366,11 @@
             $('#capacidads').on('change', function() {
                 alert(this.value);
             });
-
+//acceder al id del option seleccionado de un select
+            $("#localidad").change(function() {
+                cantidad=$(this).children(":selected").attr("id");
+                $('#capacidadLocal').text(cantidad);
+            });
         });
 
         var cont = 0;
@@ -375,13 +386,11 @@
                     total += parseFloat($(this).val());
                 }
             });
-            //console.log(total);
             $("#capacidad").val(total);
         }
 
         function agregar() {
             cont++;
-
             var fila = '<tr class="selected" id="fila' + cont + '" onclick="seleccionar(this.id);"><td>' +
                 cont +
                 '</td><td><input type="text" id="sectors" name="sectors[]" class="form-control" required></td><td><input name="colors[]" id="color" type="color" class="form-control" /></td><td><input type="number" id="capacidads" name="capacidads[]" class="form-control monto" min=0 value=0 onchange="sumar()" required></td><td></td></tr>';
@@ -398,32 +407,19 @@
         }
 
         function seleccionar(id_fila) {
-
             if ($('#' + id_fila).hasClass('seleccionada')) {
-
-
                 removerArray(id_fila);
                 $('#' + id_fila).removeClass('seleccionada');
-
             } else {
                 $('#' + id_fila).addClass('seleccionada');
                 id_fila_selected.push(id_fila);
-
             }
-
-            //2702id_fila_selected=id_fila;
-
-
         }
 
         function eliminar(id_fila) {
-            /*$('#'+id_fila).remove();
-            reordenar();*/
             for (var i = 0; i < id_fila.length; i++) {
                 $('#' + id_fila[i]).remove();
-
             }
-
             reordenar();
         }
 

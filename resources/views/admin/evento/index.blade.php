@@ -23,6 +23,7 @@
                     <tr>
                         <th scope="col">ID</th>
                         <th scope="col">EVENTO</th>
+                        <th scope="col">CATEGORIA</th>
                         <th scope="col">ESTADO</th>
                         <th scope="col">Acciones</th>
                     </tr>
@@ -33,6 +34,7 @@
                         <tr>
                             <td scope="col">{{ $evento->id }}</td>
                             <td scope="col">{{ $evento->title }}</td>
+                            <td scope="col">{{ $evento->category->name}}</td>
                             <td scope="col">deshabilitado</td>
                             <td>
                                 <form action="{{ route('admin.evento.destroy', $evento->id) }}" method="POST">

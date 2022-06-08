@@ -3,7 +3,9 @@
 @section('title', 'Configuración')
 
 @section('content_header')
-    <h1>Configuración - {{ $evento->title }} - {{ $localidad->nombreInfraestructura }}</h1>
+    <h1 class="text-center" style="align-items: center; font-size: 30px">Configuración</h1>
+    <h1 class="text-center" style="align-items: center; font-size: 25px">{{ $evento->title }} -
+        {{ $localidad->nombreInfraestructura }}</h1>
 @stop
 
 @section('content')
@@ -67,24 +69,31 @@
                             <label for="" class="text-center font-bold">Area: </label>
                             <p class="form-control" style="background: rgb(225, 155, 155)">Sin Area</p>
                         </div>
+
+                        <div class="col-lg-4  container-img mt-2">
+                            <div class="form-control text-center"
+                                style="background: #F7D716; height: 80px; align-items: center">
+                                Debe crear las áreas que usará en el evento y esta localidad
+                            </div>
+                        </div>
                     @else
                         <div class="col-lg-2">
                             <label for="" class="text-center font-bold">Area: </label>
                             <p class="form-control" style="background: rgb(137, 245, 200)">Area por defecto</p>
                         </div>
+                        <div class="col-lg-4  container-img">
+                            <button type="submit" class="btn btn-primary form-control" style="height: 60px;">
+                                <span>ADD</span>
+                            </button>
+                        </div>
                     @endif
-                    <div class="col-lg-4  container-img">
-                        <button type="submit" class="btn btn-primary form-control" style="height: 60px;">
-                            <span>ADD</span>
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>
-        <div class="card-body">
-            <table id="tablaConfigurar" class="table table-striped shadow-lg " style="width:100%; background:White">
+        <div class="card-body" style="background: #ffffff">
+            <table id="tablaConfigurar" class="table table-striped" style="width:100%;">
                 <thead>
-                    <tr>
+                    <tr style="height: 50px">
                         <th scope="col">FECHA</th>
                         <th scope="col">HORA INICIO</th>
                         <th scope="col">DURACIÓN</th>
@@ -94,7 +103,7 @@
                 </thead>
                 <tbody>
                     @foreach ($fechas as $f)
-                        <tr>
+                        <tr style="height: 40px">
                             <td scope="col">{{ $f->fecha }}</td>
                             <td scope="col">{{ $f->hora }}</td>
                             <td scope="col">{{ $f->duracion }}</td>
@@ -105,20 +114,19 @@
                                     method="post">
                                     @csrf
                                     @method('delete')
-                                    <a href="" class="btn" style="background: #23345C; color: white"
-                                        style="overflow: hidden; height: 20px;">
-                                        <i class="fa fa-duotone fa-layer-group" style="size: 10px"></i>
-                                        <p style="font-size: 10px; height: 0px;">Sección</p>
+                                    <a href="" class="btn"
+                                        style="background: #23345C; color: white; width: 90px; height: 36px;font-size: 12px">
+                                        Sección
                                     </a>
-                                    <a href="" class="btn" style="background: #1ECFD6;color: white">
-                                        <i class="fa fa-duotone fa-pen-to-square fa-2x" style="color: #0878A4"></i>
+                                    <a href="" class="btn" style="background: #1ECFD6;color: white; width: 90px">
+                                        <i class="fa fa-duotone fa-pen-to-square" style="color: #0878A4"></i>
                                     </a>
-                                    <a href="" class="btn" style="background: #EDD170;color: white">
-                                        <i class="fa fa-duotone fa-eye fa-2x" style="color: olive"></i></a>
+                                    <a href="" class="btn" style="background: #EDD170;color: white; width: 90px">
+                                        <i class="fa fa-duotone fa-eye" style="color: olive"></i></a>
 
                                     <button type="submit" class="btn"
-                                        style="background: #C05640; color: white"><i
-                                            class="fa fa-solid fa-square-minus fa-2x"></i></button>
+                                        style="background: #C05640; color: white; width: 90px"><i
+                                            class="fa fa-solid fa-square-minus"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -150,11 +158,106 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
+                <form id="form" action="{{ route('admin.eventoLocalidadConfiguracion.storeArea', $le) }}" method="POST">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="row" style="background: rgba(153, 180, 242, 0.133)">
+                                <div class="col-lg-4">
+                                    <label for="">Capacidad Local </label>
+                                    <label for="" class="form-control"
+                                        id="capacidadLugar">{{ $localidad->capacidadMaxima }}</label>
+                                </div>
+                                <div class="col-lg-4"></div>
+                                <div class="col-lg-4">
+                                    <label for="">Sector</label>
 
+                                    <select class="form-control" aria-label="Default select example" id="Sectores"
+                                        name="sectores_id">
+                                        <option value="" disabled selected>Seleccionar</option>
+                                        @foreach ($sectores as $s)
+                                            <option class="selectivo" value={{ $s->id }}
+                                                id="[{{ $s->capacidadSector }}]" name="[{{ $s->id }}]">
+                                                {{ $s->nombre }}
+                                            </option>
+                                        @endforeach
+                                        @php
+                                            $ids=$sectores->pluck('id');
+                                            $capacidads=$sectores->pluck('capacidadSector');
+                                        @endphp
+                                        <option value=0 name={{$ids}} id={{$capacidads}}>Mostrar todo</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            @csrf
+                            <input id="json" name="json" type="text" hidden value="">
+                            <div id="contenido">
+                                @foreach ($sectores as $s)
+                                    <div id="{{ $s->id }}content" class="contentSectores" hidden>
+                                        <div class="col-lg-12" style="border-top: 2px solid;color: gainsboro"></div>
+                                        <label for="" style="text-transform:uppercase">{{ $s->nombre }}</label>
+                                        <br>
+                                        <label for="" style="font-size: 12px">Capacidad Máxima: </label>
+                                        <label for="" class="form-control" id="capacidadSector{{ $s->id }}s"
+                                            style="width: 200px; font-size: 12px"></label>
+
+                                        <button id="{{ $s->id }}btn_add" class="form-control btn btn-success buton"
+                                            type="button" style="width: 100px; color:white"><i class="fa fa-solid fa-plus"
+                                                style="color: white"></i></button>
+                                        <button id="{{ $s->id }}btn_del" class="btn btn-default" type="button"
+                                            style="background: #D75B66; width: 100px; color:white"><i
+                                                class="fa fa-solid fa-trash" style="color: white"></i></button>
+                                        <button id="{{ $s->id }}btn_delall" class="form-control btn btn-default"
+                                            type="button" style="background: #C05640; color:white; width: 120px"><i
+                                                class="fa fa-solid fa-folder-minus" style="color:white"></i></button>
+                                        <br>
+                                        <table id="{{ $s->id }}tabla"
+                                            class="table table-success table-striped table-hover mt-1" style="width: 100%">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 50px">Nro</th>
+                                                    <th style="width: 250px">Nombre</th>
+                                                    <th style="width: 50px">Color</th>
+                                                    <th style="width: 100px">Capacidad</th>
+                                                    <th style="width: 100px">Precio</th>
+                                                    <th style="width: 100px">Acción</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endforeach
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-primary" type="submit" id="btnGuardarSectores"
+                            name="btnGuardarSectores">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- modal Sección Areas --}}
+    <div class="modal fade" id="area" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title " id="staticBackdropLabel">Areas -{{ $localidad->nombreInfraestructura }} -
+                        {{ $evento->title }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-lg-8">
-
+                            <label for="">Capacidad Máxima: </label>
+                            <label for="" class="form-control" id="capacidadLugar"></label>
                         </div>
                         <div class="col-lg-4">
                             <label for="">Sector</label>
@@ -163,8 +266,8 @@
                                 name="sectores_id">
                                 <option value="" disabled selected>Seleccionar</option>
                                 @foreach ($sectores as $s)
-                                    <option id="{{ $s->id }}sector" class="selectivo"
-                                        value={{ $s->id }}>{{ $s->nombre }}
+                                    <option class="selectivo" value={{ $s->id }}
+                                        id="{{ $s->capacidadSector }}">{{ $s->nombre }}
                                     </option>
                                 @endforeach
                                 <option id="mostrarTodo" value=0>Mostrar todo</option>
@@ -197,10 +300,10 @@
                                             <thead>
                                                 <tr>
                                                     <th style="width: 50px">Nro</th>
-                                                    <th style="width: 250px">Nombre</th>
-                                                    <th style="width: 100px">Color</th>
-                                                    <th style="width: 100px">capacidad</th>
-                                                    <th style="width: 150px">Precio</th>
+                                                    <th style="width: 100px">Nombre</th>
+                                                    <th style="width: 50px">Color</th>
+                                                    <th style="width: 150px">capacidad</th>
+                                                    <th style="width: 80px">Precio</th>
                                                     <th style="width: 100px">Acción</th>
 
                                                 </tr>
@@ -211,14 +314,14 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <button class="form-control btn btn-primary" type="button" id="btnGuardarSectores"
-                                name="btnGuardarSectores">Guardar</button>
 
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button class="btn btn-primary" type="submit" id="btnGuardarSectores"
+                        name="btnGuardarSectores">Guardar</button>
 
                 </div>
 
@@ -439,11 +542,31 @@
                     });
                 }
             });
+            // capacidad del sector en label
+            /*     $("#Sectores").change(function() {
+                     cantidad = $(this).children(":selected").attr("id");
+                     //alert(cantidad);
+
+                     $('#capacidadLugar').text(cantidad);
+
+                 });*/
+            // capacidad del sector en label
+            $("#Sectores").change(function() {
+                capacidads = $(this).children(":selected").attr("id");
+                capacidads=JSON.parse(capacidads);
+                ids = $(this).children(":selected").attr("name");
+                ids=JSON.parse(ids);
+               for (let index = 0; index < capacidads.length; index++) {
+                   $('#capacidadSector' + ids[index] + 's').text(capacidads[index]);
+               }
+
+                
+            });
             //al momento de guardar el modal de areas
             $('#btnGuardarSectores').on('click', function() {
                 let tabla = [];
                 let contenido = [];
-                contenido=[];
+                contenido = [];
                 $('.contentSectores').each(function() {
                     event.preventDefault();
                     var regex = /(\d+)/g;
@@ -451,7 +574,7 @@
                     nroT = idT.match(regex);
                     $('#' + idT + ' tbody tr').each(function() {
                         Fila = $(this).attr('id');
-                        
+
                         nroF = Fila.match(regex);
                         const tab = {
                             nombre: $(this).find('input[id=' + nroF + 'nombre' + nroT +
@@ -466,7 +589,7 @@
                         contenido.push(tab);
                     });
                     let copia = contenido;
-                    contenido=[];
+                    contenido = [];
                     const cont = {
                         id: nroT,
                         content: copia
@@ -476,7 +599,6 @@
                 });
                 jsn = JSON.stringify(tabla);
                 $("#json").val(jsn);
-                $( "#form" ).submit();
             });
         });
 

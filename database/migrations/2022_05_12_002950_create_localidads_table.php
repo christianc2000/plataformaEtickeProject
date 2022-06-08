@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('localidads', function (Blueprint $table) {
             $table->id();
-            $table->string('ubicación');
-            $table->string('gps');
+            $table->string("ubicación");
+            $table->string("gps");
             $table->string("nombreInfraestructura");
             $table->unsignedInteger("capacidadMaxima");
             $table->timestamps();

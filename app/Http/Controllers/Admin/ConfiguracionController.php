@@ -53,48 +53,52 @@ class ConfiguracionController extends Controller
     {
         $s = json_decode($request->json, true);
         $sectors = collect($s);
-       
-      /*  $p = collect($sectors->first());
+
+        /*  $p = collect($sectors->first());
         $p = collect($p->last());
         $p = $p->first();
         return $p['nombre'];*/
         $seccionLocalidad = 0;
         foreach ($sectors as $sector) {
-            $sector=collect($sector);
+            $sector = collect($sector);
             $n = 1;
             foreach ($sector as $areas) {
-                $areas=collect($areas);
-                
-                if ($n==1) {
+                $areas = collect($areas);
+
+                if ($n == 1) {
                     $n++;
                     $seccionLocalidad = (int)$areas->first();
                 } else {
-                    $areas=$areas->first();
-                  
+                    $areas = $areas->first();
+
                     $a = Area::create([
                         'nombre' => $areas['nombre'],
                         'capacidad' => $areas['capacidad'],
                         'nivel' => 1
                     ]);
-                  
+
                     $sa = SectorArea::create([
                         'seccion_localidad_id' => $seccionLocalidad,
+                        'precio'=>$areas['precio'],
+                        'color'=>$areas['color'],
                         'area_id' => $a->id,
                         'localidad_evento_id' => $le->id
                     ]);
-                   
                 }
             }
-           return redirect()->route('admin.eventoLocalidadConfiguracion.index',$le);
+            return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
         }
     }
 
     public function store(Request $request, localidadEvento $le)
     {
-
-
-
-      //  return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
+        Fecha::create([
+            'fecha' => $request->fecha,
+            'hora' => $request->horaEvento,
+            'duracion' => $request->duración,
+            'localidad_evento_id' => $le->id
+        ]);
+        return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
     /**
      * Display the specified resource.

@@ -18,7 +18,7 @@
 
             <div class="row">
 
-                <div class="col-6">
+                <div class="col-6 mb-2">
                     <br>
                     @if (count($le->sectorAreas) == 0)
                         <div class="contenedor-botones mb-3">
@@ -32,11 +32,14 @@
                                 </svg>
                             </button>
                         </div>
+                    @else
+                        <button type="button" id="mostrarAreas" class="btn btn-primary" data-bs-toggle="modal"
+                            data-bs-target="#areasModal">
+                            Mostrar Áreas
+                        </button>
                     @endif
-
                 </div>
                 <div class="col-lg-3"></div>
-
                 <div class="col-lg-2">
                     <label for="">Entradas:</label>
                     <label for="">Registradas:</label>
@@ -114,7 +117,7 @@
                                     method="post">
                                     @csrf
                                     @method('delete')
-                                    <a href="" class="btn"
+                                    <a href="{{route('admin.eventoLocalidad.espaciosFecha.index',compact('le','f'))}}" class="btn"
                                         style="background: #23345C; color: white; width: 90px; height: 36px;font-size: 12px">
                                         Sección
                                     </a>
@@ -125,8 +128,7 @@
                                         <i class="fa fa-duotone fa-eye" style="color: olive"></i></a>
 
                                     <button type="submit" class="btn"
-                                        style="background: #C05640; color: white; width: 90px"><i
-                                            class="fa fa-solid fa-square-minus"></i></button>
+                                        style="background: #C05640; color: white; width: 90px"><i class="fa fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -159,6 +161,7 @@
                 </div>
 
                 <form id="form" action="{{ route('admin.eventoLocalidadConfiguracion.storeArea', $le) }}" method="POST">
+                    @csrf
                     <div class="modal-body">
                         <div class="row">
                             <div class="row" style="background: rgba(153, 180, 242, 0.133)">
@@ -181,15 +184,16 @@
                                             </option>
                                         @endforeach
                                         @php
-                                            $ids=$sectores->pluck('id');
-                                            $capacidads=$sectores->pluck('capacidadSector');
+                                            $ids = $sectores->pluck('id');
+                                            $capacidads = $sectores->pluck('capacidadSector');
                                         @endphp
-                                        <option value=0 name={{$ids}} id={{$capacidads}}>Mostrar todo</option>
+                                        <option value=0 name={{ $ids }} id={{ $capacidads }}>Mostrar todo
+                                        </option>
                                     </select>
 
                                 </div>
                             </div>
-                            @csrf
+
                             <input id="json" name="json" type="text" hidden value="">
                             <div id="contenido">
                                 @foreach ($sectores as $s)
@@ -236,95 +240,64 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-primary" type="submit" id="btnGuardarSectores"
+                        <button class="btn btn-primary" type="button" id="btnGuardarSectores"
                             name="btnGuardarSectores">Guardar</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    {{-- modal Sección Areas --}}
-    <div class="modal fade" id="area" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+    {{-- modal Mostrar Areas --}}
+    <div class="modal fade" id="areasModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header text-center">
-                    <h5 class="modal-title " id="staticBackdropLabel">Areas -{{ $localidad->nombreInfraestructura }} -
-                        {{ $evento->title }}</h5>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Áreas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-lg-8">
-                            <label for="">Capacidad Máxima: </label>
-                            <label for="" class="form-control" id="capacidadLugar"></label>
-                        </div>
-                        <div class="col-lg-4">
-                            <label for="">Sector</label>
-
-                            <select class="form-control" aria-label="Default select example" id="Sectores"
-                                name="sectores_id">
-                                <option value="" disabled selected>Seleccionar</option>
-                                @foreach ($sectores as $s)
-                                    <option class="selectivo" value={{ $s->id }}
-                                        id="{{ $s->capacidadSector }}">{{ $s->nombre }}
-                                    </option>
-                                @endforeach
-                                <option id="mostrarTodo" value=0>Mostrar todo</option>
+                        <div class="col-lg-12">
+                            <label for="">Moneda:</label>
+                            <select name="" id="moneda" class="form-control">
+                                <option value="Bs" selected>bolivianos</option>
+                                <option value="$">dólares</option>
                             </select>
-
                         </div>
-
-                        <form id="form" action="{{ route('admin.eventoLocalidadConfiguracion.storeArea', $le) }}"
-                            method="POST">
-                            @csrf
-                            <input id="json" name="json" type="text" hidden value="">
-                            <div id="contenido">
-                                @foreach ($sectores as $s)
-                                    <div id="{{ $s->id }}content" class="contentSectores" hidden>
-                                        <br>
-                                        <label for="" style="text-transform:uppercase">{{ $s->nombre }}</label>
-                                        <br>
-                                        <button id="{{ $s->id }}btn_add" class="form-control btn btn-success buton"
-                                            type="button" style="width: 100px; color:white"><i class="fa fa-solid fa-plus"
-                                                style="color: white"></i></button>
-                                        <button id="{{ $s->id }}btn_del" class="btn btn-default" type="button"
-                                            style="background: #D75B66; width: 100px; color:white"><i
-                                                class="fa fa-solid fa-trash" style="color: white"></i></button>
-                                        <button id="{{ $s->id }}btn_delall" class="form-control btn btn-default"
-                                            type="button" style="background: #C05640; color:white; width: 120px"><i
-                                                class="fa fa-solid fa-folder-minus" style="color:white"></i></button>
-                                        <br>
-                                        <table id="{{ $s->id }}tabla" class="table table-striped table-hover mt-1"
-                                            style="width: 100%">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 50px">Nro</th>
-                                                    <th style="width: 100px">Nombre</th>
-                                                    <th style="width: 50px">Color</th>
-                                                    <th style="width: 150px">capacidad</th>
-                                                    <th style="width: 80px">Precio</th>
-                                                    <th style="width: 100px">Acción</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                        </form>
+                        <div class="col-lg-12">
+                            <table id="mostrarAreasT" class="table table-striped" style="width:100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Color</th>
+                                        <th>Capacidad</th>
+                                        <th>Precio</th>
+                                        <th style="width: 30px">cambio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($sectorareas as $sa)
+                                        <tr id="{{ $sa->id }}areas">
+                                            <td>{{ $sa->area->nombre }}</td>
+                                            <td>
+                                                <div class="mt-1 box"
+                                                    style="width:50px;border: 10px solid {{ $sa->color }}"></div>
+                                            </td>
+                                            <td>{{ $sa->area->capacidad }}</td>
+                                            <td id="precio">{{ $sa->precio }}</td>
+                                            <td class="monedaArea"></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button class="btn btn-primary" type="submit" id="btnGuardarSectores"
-                        name="btnGuardarSectores">Guardar</button>
-
+                    {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                 </div>
-
             </div>
         </div>
     </div>
@@ -542,26 +515,50 @@
                     });
                 }
             });
-            // capacidad del sector en label
-            /*     $("#Sectores").change(function() {
-                     cantidad = $(this).children(":selected").attr("id");
-                     //alert(cantidad);
-
-                     $('#capacidadLugar').text(cantidad);
-
-                 });*/
-            // capacidad del sector en label
+            //para colocar la moneda del precio
+            let precios=[];
+            $("#mostrarAreas").on('click', function() {
+                precios=[];
+                $(".monedaArea").each(function() {
+                    $(this).text($("#moneda").val());
+                    precios.push($(this).parents("tr").find("td").eq(3).text());
+                })
+                //  alert($("#moneda").val());
+            })
+            
+            $("#moneda").change(function() {
+                moneda = $(this).children(":selected").val();
+                if (moneda == "Bs") {
+                    i=0;
+                    $(".monedaArea").each(function() {
+                        $(this).parents("tr").find("td").eq(3).text(precios[i]);
+                        $(this).text(moneda);
+                        i++;
+                    })
+                } else if (moneda == "$") {
+                    $(".monedaArea").each(function() {
+                        dolares=$(this).parents("tr").find("td").eq(3).text();
+                        conversion=dolares/6.87;
+                        $(this).parents("tr").find("td").eq(3).text(conversion.toFixed(2));
+                        $(this).text(moneda);
+                    })
+                }
+            });
+            //para mostrar en el label la capacidad de un sector
             $("#Sectores").change(function() {
                 capacidads = $(this).children(":selected").attr("id");
-                capacidads=JSON.parse(capacidads);
+                capacidads = JSON.parse(capacidads);
                 ids = $(this).children(":selected").attr("name");
-                ids=JSON.parse(ids);
-               for (let index = 0; index < capacidads.length; index++) {
-                   $('#capacidadSector' + ids[index] + 's').text(capacidads[index]);
-               }
-
-                
+                ids = JSON.parse(ids);
+                for (let index = 0; index < capacidads.length; index++) {
+                    $('#capacidadSector' + ids[index] + 's').text(capacidads[index]);
+                }
             });
+            //Click botón para mostrar todas las áreas
+            $("#mostrarAreas").on('click', function() {
+
+            });
+
             //al momento de guardar el modal de areas
             $('#btnGuardarSectores').on('click', function() {
                 let tabla = [];
@@ -577,6 +574,7 @@
 
                         nroF = Fila.match(regex);
                         const tab = {
+                            idSector: parseInt(nroT),
                             nombre: $(this).find('input[id=' + nroF + 'nombre' + nroT +
                                 ']').val(),
                             color: $(this).find('input[id=' + nroF + 'color' + nroT +
@@ -591,7 +589,6 @@
                     let copia = contenido;
                     contenido = [];
                     const cont = {
-                        id: nroT,
                         content: copia
                     }
                     tabla.push(cont);
@@ -599,6 +596,7 @@
                 });
                 jsn = JSON.stringify(tabla);
                 $("#json").val(jsn);
+                $('#form').submit();
             });
         });
 
@@ -610,6 +608,7 @@
             $(this).closest('tr').remove();
             reordenarF(idT);
         });
+
         //boton add para cada contenido, funcion que escucha cuando se le da click a un elemento con la clase .buton
         $(document).on('click', '.buton', function(event) {
             event.preventDefault();
@@ -625,8 +624,9 @@
             inputNombre = '<input id="' + nroFila + 'nombre' + id + '" class="form-control nro" type="text" required>';
             inputColor = '<input id="' + nroFila + 'color' + id + '" class="form-control nro" type="color" required>';
             inputCapacidad = '<input id="' + nroFila + 'capacidad' + id +
-                '"  class="form-control nro" type="number" required>';
-            inputPrecio = '<input id="' + nroFila + 'precio' + id + '" class="form-control nro" type="number" required>';
+                '"  class="form-control nro solo-nro" min=0 type="number" value=0 required>';
+            inputPrecio = '<input id="' + nroFila + 'precio' + id +
+                '" class="form-control nro solo-nro" min=0 value=0 type="number" required>';
             btnEliminar = '<button class="btn btn-danger borrar" id="' + nroFila + 'btnEliminar' + id +
                 '" name="buttonTabla">Eliminar</button>';
             var fila = '<tr id="' + nroFila + 'fila" name="' + id + 'tabla"><td>' + nroFila + '</td><td>' + inputNombre +

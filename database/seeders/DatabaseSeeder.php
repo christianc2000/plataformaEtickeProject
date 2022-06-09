@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategorySeeder::class);
         $this->call(PersonaSeeder::class);
         $this->call(PositionSeeder::class);
+        $this->call(AreaSeeder::class);
         $this->call(LocalidadSeeder::class);
         $this->call(EventoSeeder::class);
     }

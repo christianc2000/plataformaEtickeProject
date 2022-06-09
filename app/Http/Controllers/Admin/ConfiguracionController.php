@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\HorarioRequest;
 use App\Models\Area;
+use App\Models\CantidadArea;
 use App\Models\Category;
 use App\Models\Evento;
 use App\Models\Fecha;
@@ -29,6 +30,7 @@ class ConfiguracionController extends Controller
         $categories = Category::all();
         $fechas = $le->fechas;
         $sectorareas = $le->sectorAreas;
+
         $sectores = $localidad->seccionLocalidads;
         return view('admin.configurar.index', compact('le', 'evento', 'localidad', 'categories', 'fechas', 'sectorareas', 'sectores'));
     }
@@ -51,53 +53,74 @@ class ConfiguracionController extends Controller
      */
     public function storeArea(Request $request, localidadEvento $le)
     {
+
         $s = json_decode($request->json, true);
         $sectors = collect($s);
 
-        /*  $p = collect($sectors->first());
-        $p = collect($p->last());
-        $p = $p->first();
-        return $p['nombre'];*/
-        $seccionLocalidad = 0;
         foreach ($sectors as $sector) {
-            $sector = collect($sector);
-            $n = 1;
-            foreach ($sector as $areas) {
-                $areas = collect($areas);
 
-                if ($n == 1) {
-                    $n++;
-                    $seccionLocalidad = (int)$areas->first();
-                } else {
-                    $areas = $areas->first();
-
-                    $a = Area::create([
-                        'nombre' => $areas['nombre'],
-                        'capacidad' => $areas['capacidad'],
-                        'nivel' => 1
-                    ]);
-
-                    $sa = SectorArea::create([
-                        'seccion_localidad_id' => $seccionLocalidad,
-                        'precio'=>$areas['precio'],
-                        'color'=>$areas['color'],
-                        'area_id' => $a->id,
-                        'localidad_evento_id' => $le->id
-                    ]);
+            $sector = $sector['content'];
+            if ($sector != null) {
+                foreach ($sector as $areas) {
+                    if ($areas) {
+                        $a = Area::create([
+                            'nombre' => $areas['nombre'],
+                            'capacidad' => $areas['capacidad'],
+                            'nivel' => 1
+                        ]);
+                        $sa = SectorArea::create([
+                            'seccion_localidad_id' => $areas['idSector'],
+                            'precio' => $areas['precio'],
+                            'color' => $areas['color'],
+                            'area_id' => $a->id,
+                            'localidad_evento_id' => $le->id
+                        ]);
+                    }
                 }
             }
-            return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
         }
+        return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
+
+    /*para configurar el espacio de cada sector */
+    public function indexEspacio(localidadEvento $le, Fecha $f)
+    {
+        return view('admin.configurar.espacio.index', compact('le', 'f'));
+    }
+
+    public function storeEspacio(Request $request, localidadEvento $le, Fecha $fecha)
+    {
+    }
+    public function deleteEspacio(localidadEvento $le, Fecha $fecha)
+    {
+    }
+    /* fin configurar el espacio de cada sector*/
 
     public function store(Request $request, localidadEvento $le)
     {
+
         Fecha::create([
             'fecha' => $request->fecha,
             'hora' => $request->horaEvento,
             'duracion' => $request->duración,
             'localidad_evento_id' => $le->id
         ]);
+        //llena por defecto los espacios de esa área
+     /*   foreach ($le->sectorAreas as $espacio) {
+            /*  CantidadArea::create([
+                'cantidad'
+            'precio'
+            'stock'
+            'prefijo'   
+            'areaP_id'
+            'areaH_id'
+          'areaP_id'
+            'areaH_id'
+            'fecha_id'
+            ]);
+        }*/
+
+        //CantidadArea::created();
         return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }
     /**

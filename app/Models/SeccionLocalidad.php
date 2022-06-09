@@ -15,7 +15,7 @@ class SeccionLocalidad extends Model
     }
     // relación de 1 a muchos
     public function sectorAreas(){
-        return $this->hasMany(sectorAreas::class);
+        return $this->hasMany(SectorArea::class);
     }
   
 }

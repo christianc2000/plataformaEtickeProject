@@ -18,6 +18,11 @@ Route::post('evento/{le}/configuracion/Fecha',[ConfiguracionController::class, '
 Route::post('evento/{le}/configuración/Area',[ConfiguracionController::class, 'storeArea'])->name('admin.eventoLocalidadConfiguracion.storeArea');
 Route::delete('evento/{le}/{f}/horario',[ConfiguracionController::class, 'deleteHorario'])->name('admin.eventoLocalidadConfiguracion.delete');
 
+//configurar Espacios de una fecha de un Evento Localidad
+Route::get('evento/Localidad/{le}/fecha/{f}/espacio/index',[ConfiguracionController::class,'indexEspacio'])->name('admin.eventoLocalidad.espaciosFecha.index');
+Route::post('evento/Localidad/{le}/fecha/{f}/espacio/store',[ConfiguracionController::class,'storeEspacio'])->name('admin.eventoLocalidad.espaciosFecha.store');
+Route::get('evento/Localidad/{le}/fecha/{f}/espacio/destroy',[ConfiguracionController::class,'deleteEspacio'])->name('admin.eventoLocalidad.espaciosFecha.delete');
+//fin Configurar Espacios de una fecha de un Evento Localidad
 
 Route::get('/evento/{evento}/localidad',[EventoController::class,'localidadIndex'])->name('admin.evento.localidad.index');
 Route::post('/evento/{evento}/localidad',[EventoController::class,'localidadStore'])->name('admin.evento.localidad.store');

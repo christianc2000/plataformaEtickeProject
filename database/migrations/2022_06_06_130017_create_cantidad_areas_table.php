@@ -16,9 +16,10 @@ return new class extends Migration
         Schema::create('cantidad_areas', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('cantidad');
-            $table->decimal('precio',8,2);
+            $table->decimal('precio');
             $table->unsignedInteger('stock');
-            $table->string('prefijo');   
+            $table->string('prefijo');  
+            $table->string('tipo',1); 
             $table->unsignedBigInteger('areaP_id');
             $table->unsignedBigInteger('areaH_id');
             $table->foreign('areaP_id')->references('id')->on('areas')->onDelete('cascade');

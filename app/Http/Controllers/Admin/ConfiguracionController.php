@@ -25,10 +25,13 @@ class ConfiguracionController extends Controller
      */
     public function index(localidadEvento $le)
     {
+      
         $evento = Evento::all()->find($le->evento_id);
         $localidad = Localidad::all()->find($le->localidad_id);
         $categories = Category::all();
         $fechas = $le->fechas;
+        $prueba= $fechas->first();
+        
         $sectorareas = $le->sectorAreas;
 
         $sectores = $localidad->seccionLocalidads;
@@ -85,7 +88,12 @@ class ConfiguracionController extends Controller
     /*para configurar el espacio de cada sector */
     public function indexEspacio(localidadEvento $le, Fecha $f)
     {
-        return view('admin.configurar.espacio.index', compact('le', 'f'));
+        $sectorAreas=$le->sectorAreas; //capacidad general de los sectores areas en el evento localidad
+       
+        $capacidadArea=$f->cantidadAreas;//la capacidad que se registra de un area en tal fecha
+        $localidad=$le->localidad; //localidad
+        //return $sectorAreas;
+        return view('admin.configurar.espacio.index', compact('le', 'f','sectorAreas','localidad','capacidadArea'));
     }
 
     public function storeEspacio(Request $request, localidadEvento $le, Fecha $fecha)
@@ -98,28 +106,29 @@ class ConfiguracionController extends Controller
 
     public function store(Request $request, localidadEvento $le)
     {
-
-        Fecha::create([
+        $f = Fecha::create([
             'fecha' => $request->fecha,
             'hora' => $request->horaEvento,
             'duracion' => $request->duración,
             'localidad_evento_id' => $le->id
         ]);
         //llena por defecto los espacios de esa área
-     /*   foreach ($le->sectorAreas as $espacio) {
-            /*  CantidadArea::create([
-                'cantidad'
-            'precio'
-            'stock'
-            'prefijo'   
-            'areaP_id'
-            'areaH_id'
-          'areaP_id'
-            'areaH_id'
-            'fecha_id'
+        $areasH = Area::all()->where('nivel', '=', 2);
+        $areasH = $areasH->where('nombre', '=', 'individual')->first();
+        foreach ($le->sectorAreas as $espacio) {
+            $precio=(int)($espacio->precio);
+            
+            CantidadArea::create([
+                'cantidad' => $espacio->area->capacidad,
+                'precio' => $precio,
+                'stock' => $espacio->area->capacidad,
+                'prefijo' => "indv",
+                'tipo'=>'p',
+                'areaP_id' => $espacio->id,
+                'areaH_id' => $areasH->id,
+                'fecha_id' => $f->id,
             ]);
-        }*/
-
+        }
         //CantidadArea::created();
         return redirect()->route('admin.eventoLocalidadConfiguracion.index', $le);
     }

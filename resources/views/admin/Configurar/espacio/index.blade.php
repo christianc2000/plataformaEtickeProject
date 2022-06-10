@@ -4,13 +4,99 @@
 
 @section('content_header')
 
-    <h1>{{ date('d-m-Y', strtotime($f->fecha)) }}</h1>
-    <h4>{{ $le->evento->title }} - {{ $le->localidad->nombreInfraestructura }}</h4>
 @stop
 
 @section('content')
+    <div class="card">
+        <div class="card-header" style="background: rgba(153, 180, 242, 0.133)">
 
-hi
+            <label class="text-left" style="font-size: 18px; width: 90px">Evento: </label> <label
+                class="font-weight-normal " style="font-size: 18px">{{ $le->evento->title }}</label>
+            <br>
+            <label class=" text-left" style="font-size: 18px; width: 90px">Localidad: </label> <label
+                class="font-weight-normal " style="font-size: 18px">{{ $le->localidad->nombreInfraestructura }}</label>
+            <br>
+            <label class="text-left" style="font-size: 18px; width: 90px">Fecha: </label> <label
+                class="font-weight-normal " style="font-size: 18px">{{ date('d-m-Y', strtotime($f->fecha)) }}</label>
+            <br>
+
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <label for="">Capacidad Áreas</label>
+                        <label for="" class="form-control" id="capacidadAreas"></label>
+                    </div>
+                    <div class="col-lg-4"></div>
+                    <div class="col-lg-4">
+                        <label for="">Sector</label>
+
+                        <select class="form-control" aria-label="Default select example" id="Sectores" name="sectores_id">
+                            <option value="" disabled selected>Seleccionar</option>
+                            @foreach ($sectorAreas as $s)
+                                <option class="selectivo" value={{ $s->area->id }} id={{ $s->area->capacidad }}
+                                    name="[{{ $s->area->id }}]">
+                                    {{ $s->area->nombre }}
+                                </option>
+                            @endforeach
+                        
+                            <option value=0>Mostrar todo
+                            </option>
+                        </select>
+
+                    </div>
+                </div>
+
+                <input id="json" name="json" type="text" hidden value="">
+                <div id="contenido">
+                    @foreach ($sectorAreas as $s)
+                        <div id="{{ $s->id }}content" class="contentSectores" hidden>
+                            <div class="col-lg-12" style="border-top: 2px solid;color: gainsboro"></div>
+                            <label for="" style="text-transform:uppercase">{{ $s->area->nombre }}</label>
+                            <br>
+                            <label for="" style="font-size: 12px">Capacidad Máxima: </label>
+                            <label for="" class="form-control" id="capacidadSector{{ $s->id }}s"
+                                style="width: 200px; font-size: 12px"></label>
+
+                            <button id="{{ $s->id }}btn_add" class="form-control btn btn-success buton"
+                                type="button" style="width: 100px; color:white"><i class="fa fa-solid fa-plus"
+                                    style="color: white"></i></button>
+                            <button id="{{ $s->id }}btn_del" class="btn btn-default" type="button"
+                                style="background: #D75B66; width: 100px; color:white"><i class="fa fa-solid fa-trash"
+                                    style="color: white"></i></button>
+                            <button id="{{ $s->id }}btn_delall" class="form-control btn btn-default" type="button"
+                                style="background: #C05640; color:white; width: 120px"><i
+                                    class="fa fa-solid fa-folder-minus" style="color:white"></i></button>
+                            <br>
+                            <table id="{{ $s->id }}tabla" class="table table-success table-striped table-hover mt-1"
+                                style="width: 100%">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 50px">Nro</th>
+                                        <th style="width: 250px">Nombre</th>
+                                        <th style="width: 50px">Color</th>
+                                        <th style="width: 100px">Capacidad</th>
+                                        <th style="width: 100px">Precio</th>
+                                        <th style="width: 100px">Acción</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endforeach
+                </div>
+
+
+            </div>
+        </div>
+        <div class="card-footer">
+          <a href="{{route('admin.eventoLocalidadConfiguracion.index',compact('le'))}}" type="button" class="btn" style="background: #000D29; color:white">volver</a>
+          <button type="button" class="btn btn-danger">cancelar</button>
+        </div>
+    </div>
 @stop
 
 @section('css')
@@ -37,4 +123,22 @@ hi
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let array = [];
+            $('.selectivo').each(function() {
+                capacidad=$(this).attr('id');
+                array.push(capacidad);
+            });
+            $('#capacidadAreas').text(suma(array));
+        });
+
+        function suma(array) {
+            s = 0;
+            for (let index = 0; index < array.length; index++) {
+                s = s + parseInt(array[index]);
+            }
+            return s;
+        }
+    </script>
 @stop

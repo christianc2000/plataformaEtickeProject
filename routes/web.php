@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PrincipalController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Mail\ContactanosMailable;
@@ -28,8 +29,8 @@ Route::get('contactanos',function(){
    return "Mensaje enviado";
 });*/
 
-Route::get('/dashboard',function(){
-   return view('dashboard');
-});
+Route::get('eticket/principal',function(){
+   return view('publico.index');
+})->name('principal.index');
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','verified'])->name('home');

@@ -11,7 +11,7 @@
 @section('content')
 
     <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="background: rgba(153, 180, 242, 0.133)">
             <div>
                 <label for="" class="container-img" style="font-size: 20px">Horarios</label>
             </div>
@@ -110,14 +110,26 @@
                             <td scope="col">{{ $f->fecha }}</td>
                             <td scope="col">{{ $f->hora }}</td>
                             <td scope="col">{{ $f->duracion }}</td>
-                            <td scope="col">sin sección</td>
+                            <td scope="col" class="text-center">
+                                @php
+                                    $p=$f->cantidadAreas;
+                                    $p=$p->first();
+                                    
+                                @endphp
+                                @if ($p->tipo == 'p')
+                                    <p class="form-control" style="background: rgb(255, 185, 185); width: 120px">por defecto</p>
+                                @else
+                                    <p class="form-control" style="background: rgb(135, 242, 197); width: 120px">configurado</p>
+                                @endif
+                            </td>
                             <td scope="col">
                                 <form
                                     action="{{ route('admin.eventoLocalidadConfiguracion.delete', compact('le', 'f')) }}"
                                     method="post">
                                     @csrf
                                     @method('delete')
-                                    <a href="{{route('admin.eventoLocalidad.espaciosFecha.index',compact('le','f'))}}" class="btn"
+                                    <a href="{{ route('admin.eventoLocalidad.espaciosFecha.index', compact('le', 'f')) }}"
+                                        class="btn"
                                         style="background: #23345C; color: white; width: 90px; height: 36px;font-size: 12px">
                                         Sección
                                     </a>
@@ -128,7 +140,8 @@
                                         <i class="fa fa-duotone fa-eye" style="color: olive"></i></a>
 
                                     <button type="submit" class="btn"
-                                        style="background: #C05640; color: white; width: 90px"><i class="fa fa-solid fa-trash"></i></button>
+                                        style="background: #C05640; color: white; width: 90px"><i
+                                            class="fa fa-solid fa-trash"></i></button>
                                 </form>
                             </td>
                         </tr>
@@ -516,20 +529,20 @@
                 }
             });
             //para colocar la moneda del precio
-            let precios=[];
+            let precios = [];
             $("#mostrarAreas").on('click', function() {
-                precios=[];
+                precios = [];
                 $(".monedaArea").each(function() {
                     $(this).text($("#moneda").val());
                     precios.push($(this).parents("tr").find("td").eq(3).text());
                 })
                 //  alert($("#moneda").val());
             })
-            
+
             $("#moneda").change(function() {
                 moneda = $(this).children(":selected").val();
                 if (moneda == "Bs") {
-                    i=0;
+                    i = 0;
                     $(".monedaArea").each(function() {
                         $(this).parents("tr").find("td").eq(3).text(precios[i]);
                         $(this).text(moneda);
@@ -537,8 +550,8 @@
                     })
                 } else if (moneda == "$") {
                     $(".monedaArea").each(function() {
-                        dolares=$(this).parents("tr").find("td").eq(3).text();
-                        conversion=dolares/6.87;
+                        dolares = $(this).parents("tr").find("td").eq(3).text();
+                        conversion = dolares / 6.87;
                         $(this).parents("tr").find("td").eq(3).text(conversion.toFixed(2));
                         $(this).text(moneda);
                     })
@@ -555,9 +568,6 @@
                 }
             });
             //Click botón para mostrar todas las áreas
-            $("#mostrarAreas").on('click', function() {
-
-            });
 
             //al momento de guardar el modal de areas
             $('#btnGuardarSectores').on('click', function() {

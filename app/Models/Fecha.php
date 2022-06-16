@@ -14,7 +14,8 @@ class Fecha extends Model
         return $this->hasMany(CantidadArea::class);
     }
 
-    public function eventoLocalidad(){
+    public function localidadEvento(){
         return $this->belongsTo(localidadEvento::class);
     }
+   
 }

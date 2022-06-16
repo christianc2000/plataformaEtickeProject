@@ -48,7 +48,7 @@
                     <button class="btn" type="submit" style="background: gray"><i
                             class="fa fa-solid fa-magnifying-glass"></i></button>
                 </form>
-                
+
                 <ul class="navbar-nav  mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link" href="" style="color:white">Login</a></li>
                     <li class="nav-item"><a class="nav-link" href="" style="color:white">Register</a></li>
@@ -58,15 +58,13 @@
     </nav>
     {{-- carousel --}}
     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner" style="max-width: 100%; height: 250px">
-
-            @foreach ($fechas as $f)
-                @php
-                    $le = $f->localidadEvento;
-                    $ev = $le->evento;
-                    $imag = $ev->image->where('position_id', '=', 1)->first();
-                @endphp
-                @if ($fechas->first() == $f)
+        <div class="carousel-inner" style="max-width: 100%; height: 300px">
+            @php
+                $ev = $le->evento;
+                $imags = $ev->image;
+            @endphp
+            @foreach ($imags as $imag)
+                @if ($imags->first() == $imag)
                     <div class="carousel-item active">
                         <div class="text-center container-img" style="background-color: rgb(203, 203, 203)">
                             <img src="{{ asset($imag->url) }}" class="d-block zoom" style="height:auto; width:50%;"
@@ -94,39 +92,32 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-    <br>
-    {{-- Contenido --}}
-
-    <div class="container">
-        @foreach ($fechas as $f)
-            @php
-                $le = $f->localidadEvento;
-                $ev = $le->evento;
-                $localid=$le->localidad->nombreInfraestructura;
-                $imag = $ev->image->where('position_id', '=', 1)->first();
-            @endphp
-            <div class="card">
-                <div class="card-img" style="background: #000;height: 170px">
-                    
-                        <img src="{{ asset($imag->url) }}" style="width: auto;height: 100%; align-items: center">
-                   
+    {{-- contenido --}}
+    <div class="text-center">
+        <h3
+            style="text-transform: uppercase; font-family: Arial, Helvetica, sans-serif;font-weight:900;color:#616161; margin-top: 10px">
+            {{ $ev->title }}</h3>
+        <h5 style="font-weight:bold;color:#003D73; margin-top: 10px; text-align: left; margin-left: 20px">
+            Detalle
+        </h5>
+        <p style="text-align: left; margin-left: 20px; color:#616161">
+            {{ $ev->description }}
+        </p>
+        <h5 style="font-weight:bold;color:#003D73; margin-top: 10px; text-align: left; margin-left: 20px">
+            Funciones
+        </h5>
+        @foreach ($horario as $h)
+            
+                <div class="row g-0" style="margin: 20px">
+                    <div class="col-3">
+                        <div class="card-horario" style="background: blue; border-radius: 5px 0px 0px 5px">1</div>
+                    </div>
+                    <div class="col-9">
+                        <div class="card-horario" style="background: red; border-radius: 0px 5px 5px 0px">2</div>
+                    </div>
                 </div>
-                <div class="card-body" style="max-height: 110px;">
-                    <a href="{{route('principal.horario.index',compact('le','f'))}}"><h5 style="color: #313E6C; text-transform: uppercase">{{ $ev->title }}</h5></a>
-                    
-                        <p style="font-size: 10px;">  <a href="#" style="color:#A7A5A5;"><span><i class="fa fa-solid fa-location-dot" style="color:#313E6C; margin-right: 10px"></i></span>{{$localid}}</p></a> 
-                
-
-                </div>
-                <div class="card-footer" style="width: 100%;height: 100%; background: #D3E1E2">
-                   {{$f->fecha}}
-                </div>
-            </div>
+          
         @endforeach
-<br>
-
-
-
     </div>
 </body>
 

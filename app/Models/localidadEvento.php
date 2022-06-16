@@ -24,6 +24,7 @@ class localidadEvento extends Model
     {
         return $this->hasMany(Fecha::class);
     }
+   
      // relación de 1 a muchos
      public function sectorAreas(){
         return $this->hasMany(SectorArea::class);

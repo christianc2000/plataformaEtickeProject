@@ -29,8 +29,8 @@ Route::get('contactanos',function(){
    return "Mensaje enviado";
 });*/
 
-Route::get('eticket/principal',function(){
-   return view('publico.index');
-})->name('principal.index');
+Route::get('eticket/principal',[PrincipalController::class,'index'])->name('principal.index');
+Route::get('eticket/principal/{le}/horario/{f}',[PrincipalController::class,'horarioEvento'])->name('principal.horario.index');
+
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->middleware(['auth','verified'])->name('home');

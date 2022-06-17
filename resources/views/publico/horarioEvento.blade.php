@@ -107,16 +107,43 @@
             Funciones
         </h5>
         @foreach ($horario as $h)
-            
-                <div class="row g-0" style="margin: 20px">
-                    <div class="col-3">
-                        <div class="card-horario" style="background: blue; border-radius: 5px 0px 0px 5px">1</div>
-                    </div>
-                    <div class="col-9">
-                        <div class="card-horario" style="background: red; border-radius: 0px 5px 5px 0px">2</div>
+            <div class="row g-0"
+                style="margin: 20px;height: 150px ;box-shadow:  0px 0px 5px 5px rgb(214, 214, 214);border-radius: 5px 5px 5px 5px;">
+                <div class="col-3">
+                    <div class="card-horario" style="background: #003D73; border-radius: 5px 0px 0px 5px; display: flex;
+                    justify-content: center;align-items: center;">
+                        @php
+                            $fe = strtotime($h);
+                            $dia = date('m', $fe);
+                        @endphp
+                        día: {{ $fe }}
+                        fecha: {{$h->fecha}}
                     </div>
                 </div>
-          
+                <div class="col-4">
+                    <div class="card-horario" style="background: white;max-height: 150px; display: flex;
+                    justify-content: center;
+                    align-items: center;">
+
+                        <p style="font-size: 11px;font-weight:900">
+                            {{ $le->localidad->nombreInfraestructura }}
+                            <br><br>
+                            <a href="#" style="color:#A7A5A5;"><i class="fa fa-solid fa-location-dot fa-2x"
+                                    style="color:#313E6C;"></i></a>
+                        </p>
+
+
+
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="card-horario" style="background: white; border-radius: 0px 5px 5px 0px">
+                        <button class="btn btn-primary" type="button">Ubicación</button>
+                        <button class="btn btn-warning" type="button">Comprar</button>
+
+                    </div>
+                </div>
+            </div>
         @endforeach
     </div>
 </body>

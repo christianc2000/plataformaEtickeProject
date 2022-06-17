@@ -114,7 +114,7 @@
                 <div class="card-body" style="max-height: 110px;">
                     <a href="{{route('principal.horario.index',compact('le','f'))}}"><h5 style="color: #313E6C; text-transform: uppercase">{{ $ev->title }}</h5></a>
                     
-                        <p style="font-size: 10px;">  <a href="#" style="color:#A7A5A5;"><span><i class="fa fa-solid fa-location-dot" style="color:#313E6C; margin-right: 10px"></i></span>{{$localid}}</p></a> 
+                        <p style="font-size: 10px;">  <a href="#" style="color:#A7A5A5;"><span><i class="fa fa-solid fa-location-dot" style="color:#313E6C; margin-right: 10px"></i></span>{{$localid}}</a></p> 
                 
 
                 </div>
